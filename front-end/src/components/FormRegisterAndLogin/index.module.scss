@@ -1,0 +1,51 @@
+@import '../../styles/abstracts/variables.scss';
+
+.titleFormRegisterAndLogin{
+    margin-bottom: 10px;
+}
+.mainContainerFormRegisterAndLogin{
+    display: flex;
+    flex-direction: column;
+    background-color: $Light-Black;
+    padding: 20px;
+    border-radius: 10px;
+    margin-bottom: 10px;
+    .containerLabelInput{
+        display: flex;
+        flex-direction: column;
+        margin-bottom: 10px;
+        label{
+            margin-bottom: 10px;
+        }
+        input{
+            outline: none;
+            padding: 10px;
+            border-radius: 10px;
+            border: none;
+        }
+        .errorP{
+            color: $Red;
+        }
+    }
+    .buttonFormRegisterAndLogin{
+        background-color: $Blue;
+        color: $White;
+        border: none;
+        border-radius: 10px;
+        padding: 10px;
+        font-size: 16px;
+        font-weight: 700;
+        cursor: pointer;
+        &:hover{
+            background-color: $Hover-Blue;
+        }
+    }
+}
+.linkFormRegisterAndLogin{
+    color: $Blue;
+    font-size: 18px;
+    font-weight: 700;
+    &:hover{
+        color: $Hover-Blue;
+    }
+}
