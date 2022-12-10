@@ -32,7 +32,6 @@ const userSchema = new Schema(
       },
     picture: {
       type: String,
-      default: `https://res.cloudinary.com/dvdun5uli/image/upload/v1670626710/ChatGroup/Placeholder/perfil-del-usuario_dlt8iz.png`
     },
   },
   {
