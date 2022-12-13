@@ -1,0 +1,27 @@
+@import '../../styles/abstracts/variables.scss';
+
+.mainContainerModalChannel{
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    padding: 10px;
+    align-items: center;
+    cursor: pointer;
+    .containerImgChannel{
+        background-color: $Hover-Black;
+        margin-right: 10px;
+        border-radius: 8px;
+        padding: 10px;
+        font-size: 18px;
+        font-weight: 700;
+    }
+    p{
+        color: $Text-Black;
+        font-size: 18px;
+        font-weight: 700;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        overflow: hidden;
+
+    }
+}

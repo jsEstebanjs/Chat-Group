@@ -1,20 +1,58 @@
 import { useForm } from "react-hook-form";
 import styles from "./index.module.scss";
-import { Link } from 'react-router-dom'
-function FormRegisterAndLogin({ name, title, link, textLink, message }) {
+import { Link, useNavigate } from 'react-router-dom';
+import { LoginAndRegister } from "../../apis/LoginAndRegister";
+import Cookies from 'js-cookie';
+import { Ring } from '@uiball/loaders'
+import { useState } from "react";
+
+function FormRegisterAndLogin({ name, title, link, textLink, message, url }) {
+    const [loader, setLoader] = useState(false)
+    const [errorFecth,setErrorFecth] = useState("")
+    const navigate = useNavigate()
     const {
         register,
         handleSubmit,
         formState: { errors },
     } = useForm();
 
+    const fecthError=(value)=>{
+        setErrorFecth(value)
+        setTimeout(()=>{
+            setErrorFecth("")
+        },[4000])
+
+    }
     const SubmitForm = async (data) => {
-        
+            setLoader(true)
+            const res = await LoginAndRegister(url, data)
+            if (res?.data?.data?.token) {
+                Cookies.set("token", res.data.data.token)
+                navigate('/')
+            }else{
+                if(res.response?.data?.data?.errors?.email?.message){
+                    fecthError(res.response.data.data.errors.email.message)
+                }else if(res.response?.data?.data){
+                    fecthError(res.response.data.data)
+                }else{
+                    fecthError(`Could not ${title} try again`)
+                }
+            }
+        setLoader(false)
     };
     return (
         <>
             <h2 className={styles.titleFormRegisterAndLogin}>{title}</h2>
             <form className={styles.mainContainerFormRegisterAndLogin} onSubmit={handleSubmit(SubmitForm)}>
+                {
+                    loader
+                        ?
+                        <div className={styles.containerLoaderForm}>
+                            <Ring size={40} color="#120F13" />
+                        </div>
+                        :
+                        null
+                }
                 {
                     name
                         ?
@@ -79,6 +117,7 @@ function FormRegisterAndLogin({ name, title, link, textLink, message }) {
                         <p className={styles.errorP}>Only letters and numbers</p>
                     )}
                 </div>
+                {errorFecth ? <p className={styles.errorFetch}>{errorFecth}</p> : null}
                 <button className={styles.buttonFormRegisterAndLogin}>{title}</button>
             </form>
             <p>{message}</p>

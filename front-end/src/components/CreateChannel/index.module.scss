@@ -1,0 +1,99 @@
+@import "../../styles/abstracts/variables.scss";
+
+.mainContainerCreateChannel {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  padding: 10px;
+  visibility: hidden;
+  opacity: 0;
+  transition: opacity 0.3s ease, visibility 0.3s ease;
+  z-index: 2;
+  .opacity {
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    opacity: 0.4;
+    background-color: black;
+  }
+  .containerCreateChannel {
+    display: flex;
+    flex-direction: column;
+    background-color: $Black;
+    z-index: 2;
+    padding: 20px;
+    width: 100%;
+    border-radius: 24px;
+    max-width: 650px;
+    h3 {
+      color: $White;
+      width: 100%;
+      max-width: 570px;
+      margin: 0 auto;
+    }
+    .containerForm {
+      display: flex;
+      flex-direction: column;
+      .containerInputsAndErrors{
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+        max-width: 570px;
+        margin: 10px auto;
+        input {
+            font-family: inherit;
+            outline: none;
+            background-color: $Hover-Black;
+            border: none;
+            color: $Text-Black;
+            padding: 12px;
+            font-size: 100%;
+            border-radius: 8px;
+          }
+          textarea {
+            font-family: inherit;
+            outline: none;
+            background-color: $Hover-Black;
+            border: none;
+            color: $Text-Black;
+            padding: 12px;
+            font-size: 100%;
+            border-radius: 8px;
+            min-height: 66px;
+          }
+          .errorP {
+            color: $Red;
+          }
+      }
+      .containerBtnSave {
+        display: flex;
+        width: 100%;
+        max-width: 570px;
+        margin: 10px auto 0 auto;
+        flex-direction: row;
+        justify-content: flex-end;
+        button {
+          background-color: $Blue;
+          border: none;
+          color: $White;
+          padding: 10px 20px;
+          border-radius: 8px;
+          font-size: 18px;
+          cursor: pointer;
+        }
+      }
+
+    }
+  }
+}
+.mainContainerCreateChannelVisible{
+    visibility: visible;
+    opacity: 1;
+}

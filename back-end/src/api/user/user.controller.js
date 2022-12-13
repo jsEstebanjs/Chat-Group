@@ -25,20 +25,18 @@ module.exports = {
       const token = jwt.sign({ id: user._id }, process.env.SECRET_KEY, {
         expiresIn: 60 * 60,
       });
-
-
       res
         .status(200)
         .json({
           message: "User has been created successfully",
-          data: { token, user },
+          data: { token, name:user.name,email:user.email },
         });
     } catch (err) {
       res
         .status(400)
         .json({
           message: "Failed to create user",
-          data: err.message,
+          data: err
         });
     }
   },
@@ -67,7 +65,7 @@ module.exports = {
         .status(201)
         .json({
           message: "User successfully logged in",
-          data: { user, token },
+          data: { name:user.name,email:user.email , token },
         });
     } catch (err) {
       res
@@ -75,36 +73,29 @@ module.exports = {
         .json({ message: "Error logging user", data: err.message });
     }
   },
+  async show(req, res) {
+    try {
+      const user = await User.findById(req.user)
+
+      if (!user) {
+        throw new Error("Token expired");
+      }
+      const { email, name } = user;
+      res
+        .status(200)
+        .json({
+          message: "User found",
+          data: { email, name },
+        });
+    } catch (error) {
+      res
+        .status(400)
+        .json({ message: "Username does not exist", data: error.message });
+    }
+  }
 }
 
 
-  // async show(req, res) {
-  //   try {
-  //     const user = await User.findById(req.user).populate({
-  //       path:"categoriesIds",
-  //       select:"name favicon type subcategoriesIds",
-  //       populate:{
-  //         path:"subcategoriesIds",
-  //         select:"name favicon type transactionsIds",
-  //       }
-  //     });
-
-  //     if (!user) {
-  //       throw new Error("Token expirado");
-  //     }
-  //     const { email, name, picture, transactionsIds, categoriesIds } = user;
-  //     res
-  //       .status(200)
-  //       .json({
-  //         message: "Usuario encontrado",
-  //         data: { email, name, picture, transactionsIds, categoriesIds },
-  //       });
-  //   } catch (error) {
-  //     res
-  //       .status(400)
-  //       .json({ message: "El usuario no existe", data: error.message });
-  //   }
-  // },
 
 
 

@@ -5,7 +5,7 @@ function Register() {
 
     return (
         <LayoutRegisterAndLogin>
-            <FormRegisterAndLogin title='Register' name={true} link='/login' textLink='Login' message="You have account?" />
+            <FormRegisterAndLogin url={"/register"} title='Register' name={true} link='/login' textLink='Login' message="You have account?" />
         </LayoutRegisterAndLogin>
     )
 }

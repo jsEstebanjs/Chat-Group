@@ -3,7 +3,7 @@ import FormRegisterAndLogin from "../components/FormRegisterAndLogin";
 function Login() {
     return (
         <LayoutRegisterAndLogin>
-            <FormRegisterAndLogin title='Login' name={false} link='/register' textLink='Register' message="You don't have account?" />
+            <FormRegisterAndLogin url={"/login"} title='Login' name={false} link='/register' textLink='Register' message="You don't have account?" />
         </LayoutRegisterAndLogin>
     )
 }
