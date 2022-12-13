@@ -5,39 +5,45 @@ import { LoginAndRegister } from "../../apis/LoginAndRegister";
 import Cookies from 'js-cookie';
 import { Ring } from '@uiball/loaders'
 import { useState } from "react";
+import { useDispatch } from 'react-redux'
+import { setInitialState } from "../../store/userSlice";
+
 
 function FormRegisterAndLogin({ name, title, link, textLink, message, url }) {
     const [loader, setLoader] = useState(false)
-    const [errorFecth,setErrorFecth] = useState("")
+    const [errorFecth, setErrorFecth] = useState("")
     const navigate = useNavigate()
+    const dispatch = useDispatch()
+
     const {
         register,
         handleSubmit,
         formState: { errors },
     } = useForm();
 
-    const fecthError=(value)=>{
+    const fecthError = (value) => {
         setErrorFecth(value)
-        setTimeout(()=>{
+        setTimeout(() => {
             setErrorFecth("")
-        },[4000])
+        }, [4000])
 
     }
     const SubmitForm = async (data) => {
-            setLoader(true)
-            const res = await LoginAndRegister(url, data)
-            if (res?.data?.data?.token) {
-                Cookies.set("token", res.data.data.token)
-                navigate('/')
-            }else{
-                if(res.response?.data?.data?.errors?.email?.message){
-                    fecthError(res.response.data.data.errors.email.message)
-                }else if(res.response?.data?.data){
-                    fecthError(res.response.data.data)
-                }else{
-                    fecthError(`Could not ${title} try again`)
-                }
+        setLoader(true)
+        const res = await LoginAndRegister(url, data)
+        if (res?.data?.data?.token) {
+            Cookies.set("token", res.data.data.token)
+            dispatch(setInitialState({name:res.data.data.name,email:res.data.data.email}))
+            navigate('/')
+        } else {
+            if (res.response?.data?.data?.errors?.email?.message) {
+                fecthError(res.response.data.data.errors.email.message)
+            } else if (res.response?.data?.data) {
+                fecthError(res.response.data.data)
+            } else {
+                fecthError(`Could not ${title} try again`)
             }
+        }
         setLoader(false)
     };
     return (

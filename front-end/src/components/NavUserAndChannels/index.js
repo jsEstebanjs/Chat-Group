@@ -3,13 +3,26 @@ import { MdAdd, MdKeyboardArrowDown, MdAccountCircle, MdLogout, MdClose, MdSearc
 import { useState } from 'react';
 import CreateChannel from '../CreateChannel';
 import ModalChannel from '../ModalChannel';
+import { useDispatch, useSelector } from 'react-redux';
+import { resetState } from '../../store/userSlice';
+import { useNavigate } from 'react-router-dom';
+import Cookies from 'js-cookie';
 
-function NavUserAndChannels({ img, funHandle, visible }) {
+function NavUserAndChannels({ funHandle, visible }) {
     const [modalSettingsUser, setModalSettingsUser] = useState(false)
     const [modalNewChannel, setModalNewChannel] = useState(false)
+    const dispatch = useDispatch()
+    const navigate = useNavigate()
+    const user = useSelector((state) => state.userSlice)
 
     const handleNewChannel = (value) => {
         setModalNewChannel(value)
+    }
+    const logOut = () => {
+        Cookies.remove("token")
+        dispatch(resetState())
+        navigate("/login")
+
     }
     return (
         <>
@@ -26,34 +39,32 @@ function NavUserAndChannels({ img, funHandle, visible }) {
                             <MdSearch />
                             <input type='text' placeholder='Search' />
                         </div>
-                        <ModalChannel/>
-                        <ModalChannel/>
-                        <ModalChannel/>
-                        <ModalChannel/>
-                        <ModalChannel/>
-                        <ModalChannel/>
-                        <ModalChannel/>
-                        <ModalChannel/>
-                        <ModalChannel/>
-                        <ModalChannel/>
-                        <ModalChannel/>
-                        <ModalChannel/>
-                        <ModalChannel/>
                     </div>
                     <div className={styles.containerUserInfo}>
                         {
-                            img
+                            user.picture
                                 ?
-                                <img src='https://images.pexels.com/photos/614810/pexels-photo-614810.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1' alt='user' />
+                                <img src={`${user.picture}`} alt='user' />
                                 :
                                 <div className={styles.imgUserDefault}>
-                                    M
+                                    {
+                                        user.name.split(" ").length === 1
+                                            ?
+                                            `${user.name.split(" ")[0][0]?.toUpperCase()}`
+                                            :
+                                            user.name.split(" ").length > 1
+                                                ?
+                                                `${user.name.split(" ")[0][0].toUpperCase()}${user.name.split(" ")[1][0].toUpperCase()}`
+                                                :
+                                                null
+
+                                    }
                                 </div>
 
                         }
 
                         <div className={styles.containerUserInfoNameAndArrow}>
-                            <h3>Manuel</h3>
+                            <h3>{user.name}</h3>
                             <button className={`${modalSettingsUser ? styles.buttonRotate : null}`} onClick={() => setModalSettingsUser(!modalSettingsUser)}><MdKeyboardArrowDown /></button>
                         </div>
                     </div>
@@ -63,7 +74,7 @@ function NavUserAndChannels({ img, funHandle, visible }) {
                             <p>My Profile</p>
                         </div>
                         <span className={styles.borderSettingsUser}></span>
-                        <div className={styles.containerLogOut}>
+                        <div onClick={logOut} className={styles.containerLogOut}>
                             <span><MdLogout /></span>
                             <p>Logout</p>
                         </div>

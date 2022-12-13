@@ -1,4 +1,4 @@
-const app = require('./app');
+const server = require('./app');
 const { connect , cleanup , disconnect } = require('./database');
 
 const port = process.env.PORT
@@ -6,6 +6,6 @@ const port = process.env.PORT
 connect();
 
 
-app.listen(port,()=>{
+server.listen(port,()=>{
     console.log("app is run")
 })
