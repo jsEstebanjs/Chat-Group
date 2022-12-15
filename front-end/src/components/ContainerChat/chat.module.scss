@@ -4,13 +4,13 @@
   display: flex;
   flex-direction: column;
   width: 100%;
-  height: 100vh;
+  height: calc(100% - 48px);
   padding: 10px 15px;
 
   .containerChat {
     display: flex;
     flex-direction: column-reverse;
-    height: 90%;
+    height: 100%;
     width: 100%;
     overflow-y: auto;
     &::-webkit-scrollbar {
@@ -34,8 +34,6 @@
     width: 100%;
     padding: 8px 10px;
     border-radius: 12px;
-    position: sticky;
-    bottom: 0;
     input {
       background-color: transparent;
       border: none;
@@ -56,6 +54,9 @@
       border-radius: 8px;
       border: none;
       font-size: 18px;
+      &:hover{
+        background-color: $Hover-Blue;
+      }
     }
   }
 }

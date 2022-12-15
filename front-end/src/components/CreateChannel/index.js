@@ -8,7 +8,7 @@ import { pushNewGroup } from '../../store/userSlice'
 
 function CreateChannel({ handle, visible }) {
     const [loader, setLoader] = useState(false)
-    const [error,setError] = useState("")
+    const [error, setError] = useState("")
     const dispatch = useDispatch()
 
     const {
@@ -20,15 +20,15 @@ function CreateChannel({ handle, visible }) {
     const SubmitForm = async (data) => {
         setLoader(true)
         const res = await CreateGroup(data);
-        if(res?.data?.data?.name){
-            dispatch(pushNewGroup({name:res.data.data.name , _id:res.data.data._id})) 
+        if (res?.data?.data?.name) {
+            dispatch(pushNewGroup({ name: res.data.data.name, _id: res.data.data._id }))
             handle()
             reset({ name: "", description: "" })
-        }else{
+        } else {
             setError("Could not create channel")
-            setTimeout(()=>{
+            setTimeout(() => {
                 setError("")
-            },4000)
+            }, 4000)
         }
         setLoader(false)
     };
@@ -64,18 +64,19 @@ function CreateChannel({ handle, visible }) {
                         <div className={styles.containerInputsAndErrors}>
                             <textarea placeholder='Channel Description' {...register("description", {
                                 required: true,
+                                minLength: 1,
                             })} />
                             {errors.description?.type === "required" && (
                                 <p className={styles.errorP}>The channel description is required</p>
                             )}
                         </div>
-                        {error 
-                        ?
-                        <div className={styles.containerInputsAndErrors}>
-                        <p className={styles.errorP}>{error}</p> 
-                        </div>
-                        :
-                        null
+                        {error
+                            ?
+                            <div className={styles.containerInputsAndErrors}>
+                                <p className={styles.errorP}>{error}</p>
+                            </div>
+                            :
+                            null
                         }
 
                         <div className={styles.containerBtnSave}>

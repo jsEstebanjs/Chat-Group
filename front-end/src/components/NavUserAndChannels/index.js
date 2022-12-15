@@ -24,6 +24,7 @@ function NavUserAndChannels({ funHandle, visible }) {
         navigate("/login")
 
     }
+    console.log(user.groupsId)
     return (
         <>
             <div onClick={() => funHandle(false)} className={`${styles.opacity} ${visible ? styles.opacityVisible : null}`}></div>

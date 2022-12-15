@@ -27,8 +27,8 @@ function ContainerChat() {
                         <p>Join Any Channel to Start Texting</p>
                     </>
                     :
-                    <Chat/>
-                }
+                    <Chat />
+                } 
             </div>
             {/* navSettings */}
 

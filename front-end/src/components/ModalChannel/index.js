@@ -11,7 +11,7 @@ function ModalChannel({ id, name }) {
                         :
                         name.split(" ").length > 1
                             ?
-                            `${name.split(" ")[0][0].toUpperCase()}${name.split(" ")[1][0].toUpperCase()}`
+                            `${name.split(" ")[0][0]?.toUpperCase()}${name.split(" ")[1][0]?.toUpperCase()}`
                             :
                             null
                 }
