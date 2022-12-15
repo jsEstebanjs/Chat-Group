@@ -33,7 +33,7 @@ function FormRegisterAndLogin({ name, title, link, textLink, message, url }) {
         const res = await LoginAndRegister(url, data)
         if (res?.data?.data?.token) {
             Cookies.set("token", res.data.data.token)
-            dispatch(setInitialState({name:res.data.data.name,email:res.data.data.email}))
+            dispatch(setInitialState({ name: res.data.data.name, email: res.data.data.email, groupsId: res.data.data.groupsId, groupsOwnerId: res.data.data.groupsOwnerId }))
             navigate('/')
         } else {
             if (res.response?.data?.data?.errors?.email?.message) {

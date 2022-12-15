@@ -1,0 +1,61 @@
+@import "../../styles/abstracts/variables.scss";
+
+.mainContainerChat {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100vh;
+  padding: 10px 15px;
+
+  .containerChat {
+    display: flex;
+    flex-direction: column-reverse;
+    height: 90%;
+    width: 100%;
+    overflow-y: auto;
+    &::-webkit-scrollbar {
+      width: 12px;
+    }
+    &::-webkit-scrollbar-track {
+      background: $Black;
+      border-radius: 20px;
+      margin: 10px;
+    }
+    &::-webkit-scrollbar-thumb {
+      background-color: $Hover-Black;
+      border-radius: 20px;
+      border: 3px solid $Black;
+    }
+  }
+  .mainContainerInputChat {
+    display: flex;
+    flex-direction: row;
+    background-color: $Hover-Black;
+    width: 100%;
+    padding: 8px 10px;
+    border-radius: 12px;
+    position: sticky;
+    bottom: 0;
+    input {
+      background-color: transparent;
+      border: none;
+      width: 100%;
+      outline: none;
+      font-size: 16px;
+      color: $White;
+      font-weight: 500;
+    }
+    button {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: $White;
+      background-color: $Blue;
+      padding: 10px;
+      cursor: pointer;
+      border-radius: 8px;
+      border: none;
+      font-size: 18px;
+    }
+  }
+}

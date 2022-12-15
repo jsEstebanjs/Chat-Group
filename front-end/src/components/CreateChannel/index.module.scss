@@ -32,6 +32,7 @@
     width: 100%;
     border-radius: 24px;
     max-width: 650px;
+    position: relative;
     h3 {
       color: $White;
       width: 100%;
@@ -89,7 +90,21 @@
           cursor: pointer;
         }
       }
+      .errorFetch {
+        color: $Red;
+        padding: 0 12px;
+      }
 
+    }
+    .containerLoader{
+      position: absolute;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      top: 0;
+      left: 0;
+      bottom: 0;
+      right: 0;
     }
   }
 }

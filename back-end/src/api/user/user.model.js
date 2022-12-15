@@ -27,16 +27,20 @@ const userSchema = new Schema(
       },
     },
     password: {
-        type: String,
-        required: [true, "Password is required"],
-      },
+      type: String,
+      required: [true, "Password is required"],
+    },
     picture: {
       type: String,
     },
     groupsId: [{
       type: Schema.Types.ObjectId,
       ref: "group"
-  }],
+    }],
+    groupsOwnerId: [{
+      type: Schema.Types.ObjectId,
+      ref: "group"
+    }],
   },
   {
     timestamps: true,

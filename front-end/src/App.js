@@ -6,7 +6,7 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import Cookies from 'js-cookie';
 import BigLoaderChatGroup from "./components/BigLoaderChatGroup";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { setInitialState, resetState } from './store/userSlice'
 import ProtectRoute from "./components/ProtectRoute";
 
@@ -16,6 +16,8 @@ function App() {
   const dispatch = useDispatch()
   const location = useLocation()
   const navigate = useNavigate()
+  const user = useSelector((state)=> state.userSlice);
+
   useEffect(() => {
     axios
       .get(`${process.env.REACT_APP_URL_BACK}/users`, {
@@ -40,7 +42,6 @@ function App() {
         setLoader(false);
       });
   }, []);
-
 
   return (
     <div className="App">

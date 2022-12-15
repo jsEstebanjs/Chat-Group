@@ -3,6 +3,7 @@ const express = require('express');
 const morgan = require('morgan');
 const cors = require('cors')
 const userRouter = require('./api/user/user.route');
+const groupRouter = require('./api/group/group.route');
 const http = require("http")
 const { Server } = require('socket.io')
 
@@ -41,5 +42,6 @@ app.use(cors({
 }))
 app.use(morgan("dev"))
 app.use('/users', userRouter)
+app.use('/groups', groupRouter)
 
 module.exports = server

@@ -3,7 +3,9 @@ import { createSlice } from '@reduxjs/toolkit'
 const initialState = {
   email: "",
   name:"",
-  picture:""
+  picture:"",
+  groupsId:[],
+  groupsOwnerId:[]
 }
 
 export const userSlice = createSlice({
@@ -16,6 +18,10 @@ export const userSlice = createSlice({
             ...action.payload,
           };
     },
+    pushNewGroup:(state,action)=>{
+      state.groupsId.unshift(action.payload)
+      state.groupsOwnerId.unshift(action.payload._id)
+    },
     resetState:(state,action)=>{
         return{
             ...state,
@@ -25,6 +31,6 @@ export const userSlice = createSlice({
   },
 })
 
-export const { setInitialState, resetState } = userSlice.actions
+export const { setInitialState, resetState, pushNewGroup } = userSlice.actions
 
 export default userSlice.reducer

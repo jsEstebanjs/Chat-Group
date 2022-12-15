@@ -10,10 +10,6 @@ const groupSchema = new Schema(
             type: String,
             required: [true, "Description is required"],
         },
-        idRoom:{
-            type:String,
-            required: [true, "room id is required try again"],
-        },
         favicon: {
             type: String,
         },
@@ -25,6 +21,10 @@ const groupSchema = new Schema(
             type: Schema.Types.ObjectId,
             ref: "message"
         }],
+        ownerId:{
+            type: Schema.Types.ObjectId,
+            ref: "user"
+        }
     },
     {
         timestamps: true,

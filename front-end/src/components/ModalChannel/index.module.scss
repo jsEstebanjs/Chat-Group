@@ -8,12 +8,16 @@
     align-items: center;
     cursor: pointer;
     .containerImgChannel{
+        display: flex;
         background-color: $Hover-Black;
         margin-right: 10px;
         border-radius: 8px;
         padding: 10px;
         font-size: 18px;
         font-weight: 700;
+        width: 47px;
+        align-items: center;
+        justify-content: center;
     }
     p{
         color: $Text-Black;

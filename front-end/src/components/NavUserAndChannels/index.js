@@ -39,6 +39,9 @@ function NavUserAndChannels({ funHandle, visible }) {
                             <MdSearch />
                             <input type='text' placeholder='Search' />
                         </div>
+                        {user.groupsId.map((item) => (
+                            <ModalChannel key={item._id} id={item._id} name={item.name}/>
+                        ))}
                     </div>
                     <div className={styles.containerUserInfo}>
                         {

@@ -4,7 +4,7 @@ const User = require("./user.model");
 
 
 module.exports = {
-  
+
   async register(req, res) {
     try {
       const { name, email, password, picture } = req.body;
@@ -20,7 +20,9 @@ module.exports = {
         email,
         password: encPassword,
         picture,
-      });
+        groupsId:[],
+        groupsOwnerId:[]
+      })
 
       const token = jwt.sign({ id: user._id }, process.env.SECRET_KEY, {
         expiresIn: 60 * 60,
@@ -29,7 +31,7 @@ module.exports = {
         .status(200)
         .json({
           message: "User has been created successfully",
-          data: { token, name:user.name,email:user.email },
+          data: { token, name: user.name, email: user.email, groupsId: user.groupsId, groupsOwnerId: user.groupsOwnerId },
         });
     } catch (err) {
       res
@@ -45,7 +47,10 @@ module.exports = {
     try {
       const { email, password } = req.body;
 
-      const user = await User.findOne({ email })
+      const user = await User.findOne({ email }).populate({
+        path: "groupsId",
+        select: "name _id",
+      })
 
       if (!user) {
         throw new Error("invalid password or email");
@@ -65,7 +70,7 @@ module.exports = {
         .status(201)
         .json({
           message: "User successfully logged in",
-          data: { name:user.name,email:user.email , token },
+          data: { token, name: user.name, email: user.email, groupsId: user.groupsId, groupsOwnerId: user.groupsOwnerId},
         });
     } catch (err) {
       res
@@ -75,17 +80,20 @@ module.exports = {
   },
   async show(req, res) {
     try {
-      const user = await User.findById(req.user)
+      const user = await User.findById(req.user).populate({
+        path: "groupsId",
+        select: "name _id",
+      })
 
       if (!user) {
         throw new Error("Token expired");
       }
-      const { email, name } = user;
+      const { email, name, groupsId, groupsOwnerId } = user;
       res
         .status(200)
         .json({
           message: "User found",
-          data: { email, name },
+          data: { email, name, groupsId, groupsOwnerId }
         });
     } catch (error) {
       res
