@@ -4,8 +4,8 @@ import { MdClose } from "react-icons/md";
 function NavInfoChannel({ visible, funHandle }) {
     return (
         <>
-            <div className={styles.opacity}></div>
-            <div className={styles.mainContainerNavInfoChannel}>
+            <div onClick={() => funHandle(false)} className={`${styles.opacity} ${visible ? styles.opacityVisible : null}`}></div>
+            <div className={`${styles.mainContainerNavInfoChannel} ${visible ? styles.mainContainerNavInfoChannelVisibility : null }`}>
                 <div className={styles.containerCloseAndTitle}>
                     <span onClick={() => funHandle(false)}><MdClose /></span>
                     <h3>Group information</h3>

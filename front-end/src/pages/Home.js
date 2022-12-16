@@ -1,14 +1,23 @@
 import styles from '../styles/pages/Home.module.scss'
 import ContainerChat from '../components/ContainerChat';
 import io from 'socket.io-client'
+import { useEffect } from 'react';
+import { useSelector } from 'react-redux';
 
-const socket = io(`${process.env.REACT_APP_URL_BACK }`)
+const socket = io.connect(`${process.env.REACT_APP_URL_BACK}`)
 
-function Home(){
-    return(
+function Home() {
+    const channelId = useSelector((state) => state.channelIdSlice.id)
+
+    useEffect(() => {
+        if(channelId){
+            socket.emit("join_room", channelId);
+        }
+    }, [])
+    return (
         <div className={styles.mainContainerHome}>
             <div className={styles.containerHome}>
-                <ContainerChat/>
+                <ContainerChat socket={socket} />
             </div>
 
         </div>

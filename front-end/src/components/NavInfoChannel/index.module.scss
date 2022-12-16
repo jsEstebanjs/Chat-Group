@@ -8,10 +8,9 @@
   right: 0;
   bottom: 0;
   visibility: hidden;
-  background-color: $Red;
 }
 .opacityVisible{
-  visibility: hidden;
+  visibility: visible;
 
 }
 .mainContainerNavInfoChannel {
@@ -20,10 +19,10 @@
   position: absolute;
   background-color: $Black;
   width: 260px;
-  right: 0;
+  right: -100%;
   top: 0;
   bottom: 0;
-  // visibility: hidden;
+  visibility: hidden;
   transition: right 0.3s ease, visibility 0.3s ease;
   .containerCloseAndTitle {
     display: flex;

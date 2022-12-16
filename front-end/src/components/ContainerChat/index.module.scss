@@ -7,7 +7,7 @@
   width: 100%;
   height: 100vh;
   .containerChatContainer {
-    position: relative;
+    // position: relative;
     display: flex;
     flex-direction: column;
     width: 100%;
@@ -56,6 +56,14 @@
         color: $White;
         cursor: pointer;
       }
+    }
+    .containerDefaultChat{
+      display: flex;
+      flex-direction: column;
+      width: 100%;
+      height: 100vh;
+      justify-content: center;
+      align-items: center;
     }
   }
 }

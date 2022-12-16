@@ -1,8 +1,11 @@
 import styles from './index.module.scss';
-function ModalChannel({ id, name }) {
+import { setId } from '../../store/courseIdSlice';
+import { useDispatch } from 'react-redux';
 
+function ModalChannel({ id, name }) {
+    const dispatch = useDispatch()
     return (
-        <div className={styles.mainContainerModalChannel}>
+        <div onClick={() => dispatch(setId(id))} className={styles.mainContainerModalChannel}>
             <div className={styles.containerImgChannel}>
                 {
                     name.trim().split(" ").length === 1

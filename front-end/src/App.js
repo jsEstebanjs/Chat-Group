@@ -16,7 +16,6 @@ function App() {
   const dispatch = useDispatch()
   const location = useLocation()
   const navigate = useNavigate()
-  const user = useSelector((state)=> state.userSlice);
 
   useEffect(() => {
     axios

@@ -1,16 +1,17 @@
 import NavUserAndChannels from "../NavUserAndChannels";
 import styles from './index.module.scss';
 import { MdKeyboardArrowLeft } from "react-icons/md";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Logo from '../../images/chat-icon.png'
 import Chat from "./Chat";
 import { MdMoreVert } from "react-icons/md";
 import NavInfoChannel from "../NavInfoChannel";
+import { useSelector } from "react-redux";
 
-function ContainerChat() {
+function ContainerChat({socket}) {
     const [modalChannels, setModalChannels] = useState(false)
-    const [modalInfoChannel,setModalInfoChannel] = useState(false)
-    const [idChannel, setIdChannel] = useState("o")
+    const [modalInfoChannel, setModalInfoChannel] = useState(false)
+    const channelId = useSelector((state) => state.channelIdSlice.id)
 
     const handleModalChannels = (value) => {
         setModalChannels(value)
@@ -18,6 +19,12 @@ function ContainerChat() {
     const handleModalInfoChannel = (value) => {
         setModalInfoChannel(value)
     }
+    useEffect(()=>{
+        if(channelId){
+
+        }
+
+    },[channelId])
     return (
         <div className={styles.mainContainerChatContainer}>
             <NavUserAndChannels visible={modalChannels} funHandle={handleModalChannels} />
@@ -27,20 +34,20 @@ function ContainerChat() {
                         <span onClick={() => handleModalChannels(true)}><MdKeyboardArrowLeft /></span>
                         <h2>Channels</h2>
                     </div>
-                    <span onClick={()=> handleModalInfoChannel(true)}><MdMoreVert /></span>
+                    <span onClick={() => handleModalInfoChannel(true)}><MdMoreVert /></span>
                 </div>
-                {!idChannel
+                {!channelId
                     ?
-                    <>
+                    <div className={styles.containerDefaultChat}>
                         <img src={Logo} alt='logo' />
                         <h2>Chat Group</h2>
                         <p>Join Any Channel to Start Texting</p>
-                    </>
+                    </div>
                     :
-                    <Chat />
+                    <Chat socket={socket} channelId={channelId} />
                 }
+                <NavInfoChannel visible={modalInfoChannel} funHandle={handleModalInfoChannel} />
             </div>
-            <NavInfoChannel visible={modalInfoChannel} funHandle={handleModalInfoChannel} />
         </div>
     )
 }
