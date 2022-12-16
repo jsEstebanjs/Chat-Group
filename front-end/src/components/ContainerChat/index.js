@@ -4,20 +4,30 @@ import { MdKeyboardArrowLeft } from "react-icons/md";
 import { useState } from "react";
 import Logo from '../../images/chat-icon.png'
 import Chat from "./Chat";
+import { MdMoreVert } from "react-icons/md";
+import NavInfoChannel from "../NavInfoChannel";
+
 function ContainerChat() {
     const [modalChannels, setModalChannels] = useState(false)
+    const [modalInfoChannel,setModalInfoChannel] = useState(false)
     const [idChannel, setIdChannel] = useState("o")
 
     const handleModalChannels = (value) => {
         setModalChannels(value)
     }
+    const handleModalInfoChannel = (value) => {
+        setModalInfoChannel(value)
+    }
     return (
         <div className={styles.mainContainerChatContainer}>
-            <NavUserAndChannels img={true} visible={modalChannels} funHandle={handleModalChannels} />
+            <NavUserAndChannels visible={modalChannels} funHandle={handleModalChannels} />
             <div className={styles.containerChatContainer}>
                 <div className={styles.containerNavChatContainer}>
-                    <span onClick={() => handleModalChannels(true)}><MdKeyboardArrowLeft /></span>
-                    <h2 onClick={() => handleModalChannels(true)}>Channels</h2>
+                    <div className={styles.containerArrowAndTitle}>
+                        <span onClick={() => handleModalChannels(true)}><MdKeyboardArrowLeft /></span>
+                        <h2>Channels</h2>
+                    </div>
+                    <span onClick={()=> handleModalInfoChannel(true)}><MdMoreVert /></span>
                 </div>
                 {!idChannel
                     ?
@@ -28,10 +38,9 @@ function ContainerChat() {
                     </>
                     :
                     <Chat />
-                } 
+                }
             </div>
-            {/* navSettings */}
-
+            <NavInfoChannel visible={modalInfoChannel} funHandle={handleModalInfoChannel} />
         </div>
     )
 }

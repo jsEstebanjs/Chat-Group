@@ -24,7 +24,6 @@ function NavUserAndChannels({ funHandle, visible }) {
         navigate("/login")
 
     }
-    console.log(user.groupsId)
     return (
         <>
             <div onClick={() => funHandle(false)} className={`${styles.opacity} ${visible ? styles.opacityVisible : null}`}></div>
@@ -35,13 +34,15 @@ function NavUserAndChannels({ funHandle, visible }) {
                     <button onClick={() => handleNewChannel(true)} type='button'><MdAdd /></button>
                 </div>
                 <div className={styles.mainContainerSearchAndUser}>
-                    <div className={styles.mainContainerChannelsAndSearch}>
+                    <div className={styles.mainContainerSearch}>
                         <div className={styles.containerSearch}>
                             <MdSearch />
                             <input type='text' placeholder='Search' />
                         </div>
+                    </div>
+                    <div className={styles.mainContainerChannelsAndSearch}>
                         {user.groupsId.map((item) => (
-                            <ModalChannel key={item._id} id={item._id} name={item.name}/>
+                            <ModalChannel key={item._id} id={item._id} name={item.name} />
                         ))}
                     </div>
                     <div className={styles.containerUserInfo}>

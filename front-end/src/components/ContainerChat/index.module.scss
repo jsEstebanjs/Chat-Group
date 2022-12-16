@@ -26,33 +26,49 @@
     }
     .containerNavChatContainer {
       width: 100%;
-      padding: 10px;
+      height: 60px;
       display: flex;
       flex-direction: row;
       align-items: center;
+      justify-content: space-between;
       position: sticky;
       top: 0;
       box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
-      cursor: pointer;
       background-color:$Light-Black ;
-      span {
+      padding: 0 15px;
+      .containerArrowAndTitle{
         display: flex;
-        font-size: 28px;
-        color: $White;
+        flex-direction: row;
+        span {
+          display: flex;
+          font-size: 28px;
+          color: $White;
+          cursor: pointer;
+        }
+        h2{
+          font-size: 20px;
+          font-weight: 700;
+          margin: 0 15px;
+        }
       }
-      h2{
-        font-size: 18px;
-        font-weight: 700;
+      span{
+        font-size: 24px;
+        color: $White;
+        cursor: pointer;
       }
     }
   }
 }
-// @media (min-width: 700px) {
-//   .mainContainerChatContainer {
-//     .containerChatContainer {
-//       .containerNavChatContainer {
-//         display: none;
-//       }
-//     }
-//   }
-// }
+@media (min-width: 700px) {
+  .mainContainerChatContainer {
+    .containerChatContainer {
+      .containerNavChatContainer {
+        .containerArrowAndTitle{
+          span{
+            display: none;
+          }
+        }
+      }
+    }
+  }
+}

@@ -5,13 +5,13 @@ function ModalChannel({ id, name }) {
         <div className={styles.mainContainerModalChannel}>
             <div className={styles.containerImgChannel}>
                 {
-                    name.split(" ").length === 1
+                    name.trim().split(" ").length === 1
                         ?
-                        `${name.split(" ")[0][0]?.toUpperCase()}`
+                        `${name.trim().split(" ")[0][0]?.toUpperCase()}`
                         :
-                        name.split(" ").length > 1
+                        name.trim().split(" ").length > 1
                             ?
-                            `${name.split(" ")[0][0]?.toUpperCase()}${name.split(" ")[1][0]?.toUpperCase()}`
+                            `${name.trim().split(" ")[0][0]?.toUpperCase()}${name.trim().split(" ")[1][0]?.toUpperCase()}`
                             :
                             null
                 }

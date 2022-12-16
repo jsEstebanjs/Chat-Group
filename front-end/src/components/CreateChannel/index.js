@@ -4,7 +4,8 @@ import { CreateGroup } from '../../apis/CreateGroup';
 import { Ring } from '@uiball/loaders';
 import { useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { pushNewGroup } from '../../store/userSlice'
+import { pushNewGroup } from '../../store/userSlice';
+import { Trim } from './validator';
 
 function CreateChannel({ handle, visible }) {
     const [loader, setLoader] = useState(false)
@@ -55,18 +56,25 @@ function CreateChannel({ handle, visible }) {
                             <input type='text' placeholder='Channel name'
                                 {...register("name", {
                                     required: true,
+                                    validate:Trim
                                 })}
                             />
                             {errors.name?.type === "required" && (
+                                <p className={styles.errorP}>The channel name is required</p>
+                            )}
+                            {errors.name?.type === "validate" && (
                                 <p className={styles.errorP}>The channel name is required</p>
                             )}
                         </div>
                         <div className={styles.containerInputsAndErrors}>
                             <textarea placeholder='Channel Description' {...register("description", {
                                 required: true,
-                                minLength: 1,
+                                validate:Trim
                             })} />
                             {errors.description?.type === "required" && (
+                                <p className={styles.errorP}>The channel description is required</p>
+                            )}
+                            {errors.description?.type === "validate" && (
                                 <p className={styles.errorP}>The channel description is required</p>
                             )}
                         </div>

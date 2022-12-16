@@ -12,21 +12,7 @@ function Chat(){
     return(
     <div className={styles.mainContainerChat}>
         <div className={styles.containerChat}>
-            <h2>aaaa</h2>
-            <h2>aaaa</h2>
-            <h2>aaaa</h2>
-            <h2>aaaa</h2>
-            <h2>aaaa</h2>
-            <h2>aaaa</h2>
-            <h2>aaaa</h2>
-            <h2>aaaa</h2>
-            <h2>aaaa</h2>
-            <h2>aaaa</h2>
-            <h2>aaaa</h2>
-            <h2>aaaa</h2>
-            <h2>aaaa</h2>
-            <h2>aaaa</h2>
-            <h2>aaaa</h2>
+            <h2>hola</h2>
         </div>
         <form onSubmit={(e)=> handleMessage(e)} className={styles.mainContainerInputChat}>
             <input onChange={(e)=>setValueMessage(e.target.value)} value={valueMessage} type='text' placeholder='Type a message here' />
