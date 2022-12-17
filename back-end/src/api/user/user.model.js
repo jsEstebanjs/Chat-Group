@@ -41,6 +41,10 @@ const userSchema = new Schema(
       type: Schema.Types.ObjectId,
       ref: "group"
     }],
+    invitations:[{
+      type: Schema.Types.ObjectId,
+      ref: "invitation"
+    }]
   },
   {
     timestamps: true,

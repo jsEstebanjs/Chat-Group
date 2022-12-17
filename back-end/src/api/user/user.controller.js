@@ -21,7 +21,8 @@ module.exports = {
         password: encPassword,
         picture,
         groupsId:[],
-        groupsOwnerId:[]
+        groupsOwnerId:[],
+        invitations:[]
       })
 
       const token = jwt.sign({ id: user._id }, process.env.SECRET_KEY, {

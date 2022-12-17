@@ -4,6 +4,7 @@ const morgan = require('morgan');
 const cors = require('cors')
 const userRouter = require('./api/user/user.route');
 const groupRouter = require('./api/group/group.route');
+const invitationRouter = require('./api/invitation/invitation.route')
 const http = require("http")
 const { Server } = require('socket.io')
 
@@ -43,5 +44,6 @@ app.use(cors({
 app.use(morgan("dev"))
 app.use('/users', userRouter)
 app.use('/groups', groupRouter)
+app.use('/invitation', invitationRouter)
 
 module.exports = server
