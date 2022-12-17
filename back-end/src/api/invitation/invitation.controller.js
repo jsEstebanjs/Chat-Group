@@ -1,4 +1,4 @@
-const Group = require('../group.model');
+const Group = require('../group/group.model');
 const User = require('../user/user.model');
 const Invitation = require('./invitation.model');
 

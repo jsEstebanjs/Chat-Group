@@ -7,3 +7,4 @@ router.route("/:id").delete(auth, invitationController.delete);
 router.route("/acceptInvitation/:id").post(auth, invitationController.acceptInvitation);
 
 
+module.exports = router;
