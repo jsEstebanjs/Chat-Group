@@ -1,0 +1,32 @@
+@import '../../styles/abstracts/variables.scss';
+.mainContainerModalMembers {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  .containerImgChannel {
+    display: flex;
+    background-color: $Hover-Black;
+    margin-right: 10px;
+    border-radius: 8px;
+    padding: 10px;
+    font-size: 18px;
+    font-weight: 700;
+    width: 47px;
+    align-items: center;
+    justify-content: center;
+  }
+  .containerNameAndOwner{
+    p {
+      color: $Text-Black;
+      font-size: 18px;
+      font-weight: 700;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      overflow: hidden;
+    }
+    .admin{
+      color: $Blue;
+      font-size: 14px;
+    }
+  }
+}

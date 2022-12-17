@@ -25,10 +25,35 @@ module.exports = {
         .status(200)
         .json({ message: "group created", data: group });
     } catch (err) {
-      console.log("error",err)
       res
         .status(400)
         .json({ message: "could not create group", error: err });
     }
   },
+  async listById(req, res) {
+    try {
+      const user = await User.findById(req.user);
+      const { id } = req.params;
+      const group = await Group.findById(id).populate({
+        path: "usersId",
+        select: "_id name"
+      })
+      if (!user) {
+        throw new Error("non-existent user")
+
+      }
+      if (!group) {
+        throw new Error("The group does not exist");
+      }
+      res
+      .status(200)
+      .json({ message: "group found",group })
+
+    } catch (err) {
+      res
+        .status(400)
+        .json({ message: "could not find group", error: err });
+    }
+
+  }
 }

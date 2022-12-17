@@ -42,7 +42,7 @@ function NavUserAndChannels({ funHandle, visible }) {
                     </div>
                     <div className={styles.mainContainerChannelsAndSearch}>
                         {user.groupsId.map((item) => (
-                            <ModalChannel key={item._id} id={item._id} name={item.name} />
+                            <ModalChannel funHandle={funHandle} key={item._id} id={item._id} name={item.name} />
                         ))}
                     </div>
                     <div className={styles.containerUserInfo}>

@@ -1,14 +1,8 @@
-import styles from './index.module.scss';
-import { setId } from '../../store/courseIdSlice';
-import { useDispatch } from 'react-redux';
+import styles from './index.module.scss'
 
-function ModalChannel({ funHandle,id, name }) {
-    const dispatch = useDispatch()
+function ModalMembers({name,owner}) {
     return (
-        <div onClick={() => {
-            dispatch(setId(id))
-            funHandle(false)
-            }} className={styles.mainContainerModalChannel}>
+        <div className={styles.mainContainerModalMembers}>
             <div className={styles.containerImgChannel}>
                 {
                     name.trim().split(" ").length === 1
@@ -22,9 +16,12 @@ function ModalChannel({ funHandle,id, name }) {
                             null
                 }
             </div>
-            <p>{name}</p>
+            <div className={styles.containerNameAndOwner}>
+                <p>{name}</p>
+                {owner ? <p className={styles.admin}>Admin</p> : null}
+            </div>
 
         </div>
     )
 }
-export default ModalChannel;
+export default ModalMembers;

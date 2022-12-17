@@ -6,6 +6,7 @@ import { useSelector } from 'react-redux';
 function Chat({ channelId, socket }) {
     const [valueMessage, setValueMessage] = useState("")
     const user = useSelector((state) => state.userSlice.name)
+
     const handleMessage = async (e) => {
         e.preventDefault()
         if (valueMessage !== "") {
@@ -23,11 +24,11 @@ function Chat({ channelId, socket }) {
             setValueMessage("")
         }
     }
-    useEffect(() => {
-        socket.on("receive_message", (data) => {
-            // setMessageList((list) => [...list, data]);
-        });
-    }, [socket]);
+    // useEffect(() => {
+    //     socket.on("receive_message", (data) => {
+    //         // setMessageList((list) => [...list, data]);
+    //     });
+    // }, [socket]);
     return (
         <div className={styles.mainContainerChat}>
             <div className={styles.containerChat}>

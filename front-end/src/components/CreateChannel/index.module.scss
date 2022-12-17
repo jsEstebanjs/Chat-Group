@@ -68,6 +68,8 @@
             font-size: 100%;
             border-radius: 8px;
             min-height: 66px;
+            max-height: 202px;
+            max-width: 570px;
           }
           .errorP {
             color: $Red;

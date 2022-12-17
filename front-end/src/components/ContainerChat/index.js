@@ -7,10 +7,14 @@ import Chat from "./Chat";
 import { MdMoreVert } from "react-icons/md";
 import NavInfoChannel from "../NavInfoChannel";
 import { useSelector } from "react-redux";
+import { GetGroup } from "../../apis/GetGroup";
+import LoaderMessageAndInfoGroup from "./LoaderMessageAndInfoGroup";
 
-function ContainerChat({socket}) {
+function ContainerChat({ socket }) {
     const [modalChannels, setModalChannels] = useState(false)
     const [modalInfoChannel, setModalInfoChannel] = useState(false)
+    const [groupInfo, setGroupInfo] = useState({})
+    const [loaderMessagesAndGroup, setLoaderMessagesAndGroup] = useState(false)
     const channelId = useSelector((state) => state.channelIdSlice.id)
 
     const handleModalChannels = (value) => {
@@ -19,23 +23,43 @@ function ContainerChat({socket}) {
     const handleModalInfoChannel = (value) => {
         setModalInfoChannel(value)
     }
-    useEffect(()=>{
-        if(channelId){
-
+    useEffect(() => {
+        const getGroup = async () => {
+            const res = await GetGroup(channelId);
+            if (res?.data?.group?.name) {
+                setGroupInfo(res.data.group)
+                setLoaderMessagesAndGroup(false)
+            }
         }
 
-    },[channelId])
+        if (channelId) {
+            setLoaderMessagesAndGroup(true)
+            getGroup()
+        }
+
+    }, [channelId])
+
     return (
         <div className={styles.mainContainerChatContainer}>
             <NavUserAndChannels visible={modalChannels} funHandle={handleModalChannels} />
             <div className={styles.containerChatContainer}>
-                <div className={styles.containerNavChatContainer}>
-                    <div className={styles.containerArrowAndTitle}>
-                        <span onClick={() => handleModalChannels(true)}><MdKeyboardArrowLeft /></span>
-                        <h2>Channels</h2>
-                    </div>
-                    <span onClick={() => handleModalInfoChannel(true)}><MdMoreVert /></span>
-                </div>
+                {
+                    !loaderMessagesAndGroup ?
+                        <div className={`${groupInfo.name ? styles.containerNavChatContainer : styles.containerNavChatContainerDefault}`}>
+                            <div className={styles.containerArrowAndTitle}>
+                                <span onClick={() => handleModalChannels(true)}><MdKeyboardArrowLeft /></span>
+                                <h2>{groupInfo.name ? groupInfo.name.trim() : "Channels"}</h2>
+                            </div>
+                            {groupInfo.name ?
+                                <span onClick={() => handleModalInfoChannel(true)}><MdMoreVert /></span>
+                                :
+                                null
+                            }
+                        </div>
+                        :
+                        null
+                }
+
                 {!channelId
                     ?
                     <div className={styles.containerDefaultChat}>
@@ -44,9 +68,13 @@ function ContainerChat({socket}) {
                         <p>Join Any Channel to Start Texting</p>
                     </div>
                     :
-                    <Chat socket={socket} channelId={channelId} />
+                    loaderMessagesAndGroup
+                        ?
+                        <LoaderMessageAndInfoGroup />
+                        :
+                        <Chat socket={socket} channelId={channelId} />
                 }
-                <NavInfoChannel visible={modalInfoChannel} funHandle={handleModalInfoChannel} />
+                <NavInfoChannel groupInfo={groupInfo} visible={modalInfoChannel} funHandle={handleModalInfoChannel} />
             </div>
         </div>
     )

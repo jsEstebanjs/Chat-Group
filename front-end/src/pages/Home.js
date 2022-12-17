@@ -10,10 +10,10 @@ function Home() {
     const channelId = useSelector((state) => state.channelIdSlice.id)
 
     useEffect(() => {
-        if(channelId){
+        if(channelId !== ""){
             socket.emit("join_room", channelId);
         }
-    }, [])
+    }, [channelId])
     return (
         <div className={styles.mainContainerHome}>
             <div className={styles.containerHome}>
