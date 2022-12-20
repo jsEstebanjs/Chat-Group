@@ -47,6 +47,18 @@
     flex-direction: column;
     padding: 20px;
     overflow-y: auto;
+    
+    &::-webkit-scrollbar{
+      width: 12px;
+    }
+    &::-webkit-scrollbar-track {
+      background: $Black;        
+    }
+    &::-webkit-scrollbar-thumb {
+      background-color: $Hover-Black;    
+      border-radius: 20px; 
+      border: 3px solid $Black;        
+    }
     .containerTitleAndInfo {
       display: flex;
       flex-direction: column;
@@ -157,6 +169,10 @@
           display: flex;
           align-items: center;
           justify-content: center;
+        }
+        .errorSendInvitation{
+          font-size: 16px;
+          margin-bottom: 10px;
         }
       }
     }

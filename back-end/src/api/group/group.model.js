@@ -5,6 +5,7 @@ const groupSchema = new Schema(
         name: {
             type: String,
             required: [true, "Name is required"],
+            maxlength: [25,"Maximum length of 25"]
         },
         description: {
             type: String,

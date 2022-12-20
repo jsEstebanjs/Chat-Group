@@ -1,0 +1,111 @@
+@import '../../styles/abstracts/variables.scss';
+
+.mainContainerModalInvitations{
+    display: flex;
+    flex-direction: row;
+    padding: 10px;
+    margin-bottom: 10px;
+    width: 100%;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    .containerLoader{
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background-color: $Hover-Black;
+        border-radius: 8px;
+        opacity: 0.7;
+    }
+    .containerName{
+        background-color: $Hover-Black;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        color: $White;
+        border-radius: 8px;
+        width: 47px;
+        height: 47px;
+        min-width: 47px;
+        font-size: 18px;
+        font-weight: 700;
+    }
+    .containerNameAndBtns{
+        display: flex;
+        width: 100%;
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+        padding:  5px 10px;
+        @media (max-width:580px){
+            width: 82%;
+            
+        }
+        p{
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            color: $White;
+            font-size: 20px;
+            font-weight: 700;
+            margin-right: 10px;
+        }
+        .containerBtns{
+            display: flex;
+            flex-direction: row;
+            gap: 10px;
+            button{
+                padding: 8px;
+                border-radius: 5px;
+                border: 1px solid transparent;
+                cursor: pointer;
+                transition: all 0.3s ease;
+                font-size: 16px;
+                font-weight: 600;
+                color: $White;
+            }
+            .btnAccept{
+                background-color: $Blue;
+                &:hover{
+                    color: $Blue;
+                    border: 1px solid $Blue;
+                    background-color: transparent;
+                }
+            }
+            .btnRemove{
+                background-color: $Red;
+                &:hover{
+                    color: $Red;
+                    border: 1px solid $Red;
+                    background-color: transparent;
+                }
+            }
+        }
+    }
+}
+@media(max-width:380px){
+    .mainContainerModalInvitations{
+        padding: 5px;
+        .containerNameAndBtns{
+            padding: 5px;
+            .containerBtns{
+                flex-direction: column;
+                button{
+                    padding: 8px 5px;
+                    border-radius: 5px;
+                    border: 1px solid transparent;
+                    cursor: pointer;
+                    transition: all 0.3s ease;
+                    font-size: 16px;
+                    font-weight: 600;
+                    color: $White;
+                }
+            }
+        }
+    }
+}

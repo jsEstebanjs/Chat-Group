@@ -1,6 +1,8 @@
+import { useState,useEffect } from 'react';
 import styles from './index.module.scss'
 
-function ModalMembers({name,owner}) {
+function ModalMembers({ name, owner }) {
+
     return (
         <div className={styles.mainContainerModalMembers}>
             <div className={styles.containerImgChannel}>

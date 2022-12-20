@@ -6,10 +6,12 @@ import { MdAdd } from "react-icons/md";
 import { useState } from 'react';
 import { useForm } from "react-hook-form";
 import { Ring } from '@uiball/loaders';
+import { SendInvitation } from '../../apis/SendInvitation';
 
 function NavInfoChannel({ groupInfo, visible, funHandle }) {
     const [addMember, setAddMember] = useState(false)
     const [loaderInvitation, setLoaderInvitation] = useState(false)
+    const [errorSendInvitation, setErrorSendInvitation] = useState("")
     const userGroupsOwnerId = useSelector((state) => state.userSlice.groupsOwnerId)
     const groupId = useSelector((state) => state.channelIdSlice.id)
     const {
@@ -19,11 +21,21 @@ function NavInfoChannel({ groupInfo, visible, funHandle }) {
         formState: { errors },
     } = useForm();
     const SubmitForm = async (data) => {
-        reset({ email: "" })
         setLoaderInvitation(true)
-        setAddMember(false)
+        const res = await SendInvitation(groupId, data.email)
         setLoaderInvitation(false)
+        if (res?.response?.data?.error) {
+            setErrorSendInvitation(res.response.data.error)
+            setTimeout(() => {
+                setErrorSendInvitation("")
+            }, 5000)
+        } else {
+            reset({ email: "" })
+            setAddMember(false)
+
+        }
     };
+    console.log(groupInfo)
     return (
         <>
             <div onClick={() => funHandle(false)} className={`${styles.opacity} ${visible ? styles.opacityVisible : null}`}></div>
@@ -59,6 +71,7 @@ function NavInfoChannel({ groupInfo, visible, funHandle }) {
                             {errors.email?.type === "pattern" && (
                                 <p className={styles.errorP}>It is not a valid email</p>
                             )}
+                            {errorSendInvitation ? <p className={styles.errorSendInvitation}>{errorSendInvitation}</p> : null}
                             <button type='submit'>Send invitation</button>
                             {loaderInvitation
                                 ?
@@ -71,8 +84,9 @@ function NavInfoChannel({ groupInfo, visible, funHandle }) {
                         </form >
                         {
                             groupInfo?.usersId?.map((item) => (
-                                <ModalMembers owner={userGroupsOwnerId.includes(groupId)} key={item._id} name={item.name} />
+                                <ModalMembers owner={item._id === groupInfo.ownerId} key={item._id} name={item.name} />
                             ))
+
                         }
                     </div>
                 </div>

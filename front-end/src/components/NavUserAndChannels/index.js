@@ -1,5 +1,5 @@
 import styles from './index.module.scss'
-import { MdAdd, MdKeyboardArrowDown, MdAccountCircle, MdLogout, MdClose, MdSearch } from "react-icons/md";
+import { MdAdd, MdKeyboardArrowDown, MdAccountCircle, MdLogout, MdClose, MdSearch, MdGroupAdd } from "react-icons/md";
 import { useState } from 'react';
 import CreateChannel from '../CreateChannel';
 import ModalChannel from '../ModalChannel';
@@ -7,10 +7,12 @@ import { useDispatch, useSelector } from 'react-redux';
 import { resetState } from '../../store/userSlice';
 import { useNavigate } from 'react-router-dom';
 import Cookies from 'js-cookie';
+import MyInvitations from '../MyInvitations';
 
 function NavUserAndChannels({ funHandle, visible }) {
     const [modalSettingsUser, setModalSettingsUser] = useState(false)
     const [modalNewChannel, setModalNewChannel] = useState(false)
+    const [myInvitations, setMyInvitations] = useState(false)
     const dispatch = useDispatch()
     const navigate = useNavigate()
     const user = useSelector((state) => state.userSlice)
@@ -24,9 +26,13 @@ function NavUserAndChannels({ funHandle, visible }) {
         navigate("/login")
 
     }
+    const handleMyInvitations = (value) => {
+        setMyInvitations(value)
+    }
     return (
         <>
             <div onClick={() => funHandle(false)} className={`${styles.opacity} ${visible ? styles.opacityVisible : null}`}></div>
+            <MyInvitations handle={handleMyInvitations} visible={myInvitations} />
             <CreateChannel visible={modalNewChannel} handle={handleNewChannel} />
             <div className={`${styles.mainContainerNavUserAndChannels} ${visible ? styles.mainContainerNavUserAndChannelsVisible : null}`}>
                 <div className={styles.containerChannelsTitle}>
@@ -74,12 +80,23 @@ function NavUserAndChannels({ funHandle, visible }) {
                         </div>
                     </div>
                     <div className={`${styles.mainContainerSettingsUser} ${modalSettingsUser ? styles.mainContainerSettingsUserVisibility : null}`}>
-                        <div className={styles.containerSettingsUser}>
+                        <div onClick={() => setModalSettingsUser(!modalSettingsUser)} className={styles.containerSettingsUser}>
                             <span><MdAccountCircle /></span>
                             <p>My Profile</p>
                         </div>
+                        <div onClick={() => {
+                            handleMyInvitations(true)
+                            setModalSettingsUser(!modalSettingsUser)
+                        }} className={styles.containerSettingsUser}>
+                            <span><MdGroupAdd /></span>
+                            <p>My invitations</p>
+                        </div>
                         <span className={styles.borderSettingsUser}></span>
-                        <div onClick={logOut} className={styles.containerLogOut}>
+                        <div onClick={() => {
+                            setModalSettingsUser(!modalSettingsUser)
+                            logOut()
+                        }
+                        } className={styles.containerLogOut}>
                             <span><MdLogout /></span>
                             <p>Logout</p>
                         </div>

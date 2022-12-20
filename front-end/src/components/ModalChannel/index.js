@@ -1,5 +1,5 @@
 import styles from './index.module.scss';
-import { setId } from '../../store/courseIdSlice';
+import { setId } from '../../store/channelIdSlice';
 import { useDispatch } from 'react-redux';
 
 function ModalChannel({ funHandle,id, name }) {
