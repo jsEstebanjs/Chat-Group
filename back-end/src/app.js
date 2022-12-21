@@ -10,14 +10,14 @@ const { Server } = require('socket.io')
 
 const app = express();
 const server = http.createServer(app)
-const io = new Server(server,{
-  cors:{
-    origin:['http://localhost:3000'],
+const io = new Server(server, {
+  cors: {
+    origin: ['http://localhost:3000'],
   }
 })
 
-io.on('connection',(socket)=>{
-  console.log(`User Connected: ${socket.id}`);
+io.on('connection', (socket) => {
+  // console.log(`User Connected: ${socket.id}`);
 
   socket.on("join_room", (data) => {
     socket.join(data);
@@ -27,6 +27,17 @@ io.on('connection',(socket)=>{
   socket.on("send_message", (data) => {
     socket.to(data.room).emit("receive_message", data);
   });
+  socket.on("add_new_user_group",(data)=>{
+    socket.to(data._id).emit("add_user_group", data.usersId);
+  })
+  
+  socket.on("waiting_for_invitations",(data)=>{
+    socket.join(data)
+  })
+
+  socket.on("send_invitation", (data) => {
+    socket.to(data.emailUser).emit("receive_invitation",data)
+  })
 
   socket.on("disconnect", () => {
     console.log("User Disconnected", socket.id);

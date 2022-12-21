@@ -70,6 +70,7 @@
         letter-spacing: -0.035em;
         text-transform: uppercase;
         margin-bottom: 10px;
+        word-wrap: break-word;
       }
       p {
         font-size: 18px;
@@ -77,6 +78,7 @@
         line-height: 25px;
         letter-spacing: -0.035em;
         margin-bottom: 20px;
+        word-wrap: break-word;
       }
     }
     .containerMembers {
@@ -125,6 +127,7 @@
         position: absolute;
         margin-bottom: 10px;
         opacity: 0;
+        top: 0;
         visibility: hidden;
         transition: opacity 0.3s ease ;
         z-index: -1;

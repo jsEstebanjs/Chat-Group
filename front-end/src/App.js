@@ -9,14 +9,14 @@ import BigLoaderChatGroup from "./components/BigLoaderChatGroup";
 import { useDispatch, useSelector } from "react-redux";
 import { setInitialState, resetState } from './store/userSlice'
 import ProtectRoute from "./components/ProtectRoute";
-
+import socket from "./apis/socket";
 
 function App() {
   const [loader, setLoader] = useState(true)
   const dispatch = useDispatch()
   const location = useLocation()
   const navigate = useNavigate()
-
+  const user = useSelector((state) => state.userSlice)
   useEffect(() => {
     axios
       .get(`${process.env.REACT_APP_URL_BACK}/users`, {
@@ -41,6 +41,12 @@ function App() {
         setLoader(false);
       });
   }, []);
+
+  useEffect(() => {
+    if (user.email) {
+      socket.emit("waiting_for_invitations", user.email);
+    }
+  }, [user])
 
   return (
     <div className="App">

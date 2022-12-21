@@ -5,7 +5,9 @@ import { useState } from 'react';
 import { AcceptInvitation } from '../../apis/AcceptInvitation';
 import { pushNewGroup } from '../../store/userSlice';
 import { useDispatch } from 'react-redux'
-function ModalInvitations({ reload, name, groupId, invitationId }) {
+import socket from '../../apis/socket'
+
+function ModalInvitations({ reload, name, invitationId }) {
     const [loader, setLoader] = useState(false);
     const dispatch = useDispatch()
     const handleDelete = async () => {
@@ -17,8 +19,9 @@ function ModalInvitations({ reload, name, groupId, invitationId }) {
     const handleAccept = async () => {
         setLoader(true)
         const res = await AcceptInvitation(invitationId)
-        console.log(res)
+        console.log(res.data.data)
         dispatch(pushNewGroup({ name: res.data.data.name, _id: res.data.data._id }))
+        await socket.emit("add_new_user_group",res.data.data)
         reload()
         setLoader(false)
     }

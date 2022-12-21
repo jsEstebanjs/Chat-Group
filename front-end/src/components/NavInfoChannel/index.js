@@ -7,6 +7,7 @@ import { useState } from 'react';
 import { useForm } from "react-hook-form";
 import { Ring } from '@uiball/loaders';
 import { SendInvitation } from '../../apis/SendInvitation';
+import socket from '../../apis/socket';
 
 function NavInfoChannel({ groupInfo, visible, funHandle }) {
     const [addMember, setAddMember] = useState(false)
@@ -30,12 +31,12 @@ function NavInfoChannel({ groupInfo, visible, funHandle }) {
                 setErrorSendInvitation("")
             }, 5000)
         } else {
+            await socket.emit("send_invitation", res.data.data)
             reset({ email: "" })
             setAddMember(false)
 
         }
     };
-    console.log(groupInfo)
     return (
         <>
             <div onClick={() => funHandle(false)} className={`${styles.opacity} ${visible ? styles.opacityVisible : null}`}></div>

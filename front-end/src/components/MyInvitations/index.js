@@ -4,11 +4,13 @@ import { useEffect, useState } from 'react';
 import axios from 'axios';
 import Cookies from 'js-cookie';
 import { Ring } from '@uiball/loaders'
+import socket from '../../apis/socket';
 
 function MyInvitations({ handle, visible }) {
     const [invitations, setInvitations] = useState([])
     const [loaderInvitations, setLoaderInvitations] = useState(true)
-    const [fetch,setFetch] = useState(false)
+    const [fetch, setFetch] = useState(false)
+
     useEffect(() => {
         setLoaderInvitations(true)
         axios
@@ -27,9 +29,20 @@ function MyInvitations({ handle, visible }) {
                 setLoaderInvitations(false)
             });
     }, [fetch])
-    const handleFetch = () =>{
+
+
+    useEffect(() => {
+        socket.on("receive_invitation", (data) => {
+            setInvitations((list) => [...list, data])
+        });
+        return()=>{
+            socket.off("receive_invitation")
+        }
+    }, [socket]);
+
+    const handleFetch = () => {
         setFetch(!fetch)
-    } 
+    }
     return (
         <div className={`${styles.mainContainerMyInvitations} ${visible ? styles.mainContainerMyInvitationsVisible : null}`}>
             <div onClick={() => handle(false)} className={styles.opacity}></div>
@@ -41,7 +54,7 @@ function MyInvitations({ handle, visible }) {
                         <Ring size={40} color="#120F13" />
                         :
                         invitations.map((item) => (
-                            <ModalInvitations reload={handleFetch} key={item._id} invitationId={item._id} name={item.nameGroup} groupId={item.groupId} />
+                            <ModalInvitations reload={handleFetch} key={item._id} invitationId={item._id} name={item.nameGroup} />
                         ))
                     }
                 </div>

@@ -2,8 +2,9 @@ import styles from './chat.module.scss';
 import { MdSend } from "react-icons/md";
 import { useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
+import socket from '../../apis/socket';
 
-function Chat({ channelId, socket }) {
+function Chat({ channelId }) {
     const [valueMessage, setValueMessage] = useState("")
     const user = useSelector((state) => state.userSlice.name)
 

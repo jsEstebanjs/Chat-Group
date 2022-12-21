@@ -9,8 +9,9 @@ import NavInfoChannel from "../NavInfoChannel";
 import { useSelector } from "react-redux";
 import { GetGroup } from "../../apis/GetGroup";
 import LoaderMessageAndInfoGroup from "./LoaderMessageAndInfoGroup";
+import socket from "../../apis/socket";
 
-function ContainerChat({ socket }) {
+function ContainerChat() {
     const [modalChannels, setModalChannels] = useState(false)
     const [modalInfoChannel, setModalInfoChannel] = useState(false)
     const [groupInfo, setGroupInfo] = useState({})
@@ -38,6 +39,19 @@ function ContainerChat({ socket }) {
         }
 
     }, [channelId])
+
+    useEffect(() => {
+        socket.on("add_user_group", (data) => {
+            setGroupInfo((groupInfo)=>({
+                ...groupInfo,
+                usersId:data
+
+            }))
+        })
+        return()=>{
+            socket.off("add_user_group")
+        }
+    }, [socket])
 
     return (
         <div className={styles.mainContainerChatContainer}>
@@ -72,7 +86,7 @@ function ContainerChat({ socket }) {
                         ?
                         <LoaderMessageAndInfoGroup />
                         :
-                        <Chat socket={socket} channelId={channelId} />
+                        <Chat channelId={channelId} />
                 }
                 <NavInfoChannel groupInfo={groupInfo} visible={modalInfoChannel} funHandle={handleModalInfoChannel} />
             </div>

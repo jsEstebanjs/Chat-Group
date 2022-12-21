@@ -32,7 +32,7 @@ function NavUserAndChannels({ funHandle, visible }) {
     return (
         <>
             <div onClick={() => funHandle(false)} className={`${styles.opacity} ${visible ? styles.opacityVisible : null}`}></div>
-            <MyInvitations handle={handleMyInvitations} visible={myInvitations} />
+            <MyInvitations  handle={handleMyInvitations} visible={myInvitations} />
             <CreateChannel visible={modalNewChannel} handle={handleNewChannel} />
             <div className={`${styles.mainContainerNavUserAndChannels} ${visible ? styles.mainContainerNavUserAndChannelsVisible : null}`}>
                 <div className={styles.containerChannelsTitle}>

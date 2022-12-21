@@ -72,8 +72,8 @@ module.exports = {
             }
             let validation = true
             for (let i = 0; i < user.invitations.length; i++) {
-                if (user.invitations[0].toString() === id) {
-                     validation = false
+                if (user.invitations[i].toString() === id) {
+                    validation = false
                 }
             }
             if (validation) {
@@ -84,7 +84,6 @@ module.exports = {
                 .status(200)
                 .json({ message: "invite removed", data: invitation });
         } catch (err) {
-            console.log(err)
             res
                 .status(400)
                 .json({ message: "could not remove invitation", error: err });
@@ -96,6 +95,7 @@ module.exports = {
             const { id } = req.params
             const invitation = await Invitation.findById(id)
             const group = await Group.findById(invitation.groupId)
+
             if (!user) {
                 throw new Error("non-existent user");
             }
@@ -108,7 +108,7 @@ module.exports = {
             let validation = true
             for (let i = 0; i < user.invitations.length; i++) {
                 if (user.invitations[0].toString() === id) {
-                     validation = false
+                    validation = false
                 }
             }
             if (validation) {
@@ -118,10 +118,14 @@ module.exports = {
             group.usersId.unshift(req.user)
             await user.save({ validateBeforeSave: false });
             await group.save({ validateBeforeSave: false });
+            const groupUpdate = await Group.findById(invitation.groupId).populate({
+                path: "usersId",
+                select: "_id name"
+            })
             const invitationDelete = await Invitation.findByIdAndDelete(id)
             res
                 .status(200)
-                .json({ message: "invitation accepted" ,data:group});
+                .json({ message: "invitation accepted", data: groupUpdate });
         } catch (err) {
             res
                 .status(400)
