@@ -1,15 +1,17 @@
 const { Schema, model } = require("mongoose");
+const mongoosePaginate = require('mongoose-paginate-v2');
+
 
 const messageSchema = new Schema(
     {
         message: {
             type: String,
-            required: [true, "Description is required"],
+            required: [true, "Message is required"],
         },
-        groupId: [{
+        groupId: {
             type: Schema.Types.ObjectId,
             ref: "group"
-        }],
+        },
         userId: {
             type: Schema.Types.ObjectId,
             ref: "user"
@@ -19,7 +21,7 @@ const messageSchema = new Schema(
         timestamps: true,
     }
 );
-
+messageSchema.plugin(mongoosePaginate);
 const Message = model("message", messageSchema);
 
 module.exports = Message

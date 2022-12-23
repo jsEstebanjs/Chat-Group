@@ -4,7 +4,8 @@ const morgan = require('morgan');
 const cors = require('cors')
 const userRouter = require('./api/user/user.route');
 const groupRouter = require('./api/group/group.route');
-const invitationRouter = require('./api/invitation/invitation.route')
+const invitationRouter = require('./api/invitation/invitation.route');
+const messageRouter = require('./api/message/message.route');
 const http = require("http")
 const { Server } = require('socket.io')
 
@@ -21,22 +22,23 @@ io.on('connection', (socket) => {
 
   socket.on("join_room", (data) => {
     socket.join(data);
-    console.log(`User with ID: ${socket.id} joined room: ${data}`);
+    // console.log(`User with ID: ${socket.id} joined room: ${data}`);
   });
 
   socket.on("send_message", (data) => {
-    socket.to(data.room).emit("receive_message", data);
+    console.log("grupo",data.groupId)
+    socket.to(data.groupId).emit("receive_message", data);
   });
-  socket.on("add_new_user_group",(data)=>{
+  socket.on("add_new_user_group", (data) => {
     socket.to(data._id).emit("add_user_group", data.usersId);
   })
-  
-  socket.on("waiting_for_invitations",(data)=>{
+
+  socket.on("waiting_for_invitations", (data) => {
     socket.join(data)
   })
 
   socket.on("send_invitation", (data) => {
-    socket.to(data.emailUser).emit("receive_invitation",data)
+    socket.to(data.emailUser).emit("receive_invitation", data)
   })
 
   socket.on("disconnect", () => {
@@ -56,5 +58,6 @@ app.use(morgan("dev"))
 app.use('/users', userRouter)
 app.use('/groups', groupRouter)
 app.use('/invitation', invitationRouter)
+app.use('/message', messageRouter)
 
 module.exports = server

@@ -1,0 +1,73 @@
+@import '../../styles/abstracts/variables.scss';
+
+.mainContainerModalMessage{
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    padding: 15px 10px; 
+    .containerImgOrName{
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-transform: uppercase;
+        background-color: $Black;
+        color: $White;
+        font-size: 18px;
+        font-weight: 700;
+        height: 40px;
+        width: 40px;
+        min-width: 40px;
+        border-radius: 8px;
+        margin: 0 10px auto 0;
+    }
+    .containerNameAndMessage{
+        display: flex;
+        flex-direction: column;
+        width: 80%;
+        height: max-content;
+        .containerNameAndDate{
+            display: flex;
+            flex-direction: row;
+            width: 100%;
+            align-items: center;
+            .name{
+                font-size: 18px;
+                font-weight: 700;
+                color: $Text-Black;
+                margin-right: 10px;
+            }
+            .date{
+                font-size: 14px;
+                color: $Text-Black;
+            }
+        }
+        .containerMessage{
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+            word-wrap: break-word;
+            p{
+                font-size: 18px;
+                font-weight: 400;
+                line-height: 24px;
+            }
+        }
+    }
+
+}
+@media(max-width:428px){
+
+.mainContainerModalMessage{
+    .containerNameAndMessage{
+        .containerNameAndDate{
+            .name{
+                font-size: 15px;
+            }
+            .date{
+                font-size: 11px;
+            }
+        }
+    }
+
+}
+}

@@ -10,12 +10,14 @@ import { useSelector } from "react-redux";
 import { GetGroup } from "../../apis/GetGroup";
 import LoaderMessageAndInfoGroup from "./LoaderMessageAndInfoGroup";
 import socket from "../../apis/socket";
+import { GetMessages } from '../../apis/GetMessages'
 
 function ContainerChat() {
     const [modalChannels, setModalChannels] = useState(false)
     const [modalInfoChannel, setModalInfoChannel] = useState(false)
     const [groupInfo, setGroupInfo] = useState({})
     const [loaderMessagesAndGroup, setLoaderMessagesAndGroup] = useState(false)
+    const [messages, setMessages] = useState([])
     const channelId = useSelector((state) => state.channelIdSlice.id)
 
     const handleModalChannels = (value) => {
@@ -29,6 +31,8 @@ function ContainerChat() {
             const res = await GetGroup(channelId);
             if (res?.data?.group?.name) {
                 setGroupInfo(res.data.group)
+                const resMessage = await GetMessages(15, 1, channelId)
+                setMessages(resMessage.data.message.docs)
                 setLoaderMessagesAndGroup(false)
             }
         }
@@ -42,16 +46,21 @@ function ContainerChat() {
 
     useEffect(() => {
         socket.on("add_user_group", (data) => {
-            setGroupInfo((groupInfo)=>({
+            setGroupInfo((groupInfo) => ({
                 ...groupInfo,
-                usersId:data
+                usersId: data
 
             }))
         })
-        return()=>{
+        return () => {
             socket.off("add_user_group")
         }
     }, [socket])
+
+    const addNewMessage = (newMessage) => {
+        setMessages((oldMessage) => [newMessage, ...oldMessage])
+    }
+
 
     return (
         <div className={styles.mainContainerChatContainer}>
@@ -86,7 +95,7 @@ function ContainerChat() {
                         ?
                         <LoaderMessageAndInfoGroup />
                         :
-                        <Chat channelId={channelId} />
+                        <Chat addNewMessage={addNewMessage} messages={messages} />
                 }
                 <NavInfoChannel groupInfo={groupInfo} visible={modalInfoChannel} funHandle={handleModalInfoChannel} />
             </div>
