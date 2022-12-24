@@ -46,7 +46,9 @@ module.exports = {
                 throw new Error("non-existent user")
 
             }
-            //verificar que el usuario este en el grupo
+            if(!user.groupsId.includes(group)){
+                throw new Error("you don't belong to the group")
+            }
             const message = await Message.paginate(
                 { groupId: group },
                 {

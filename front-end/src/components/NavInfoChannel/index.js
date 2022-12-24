@@ -8,6 +8,7 @@ import { useForm } from "react-hook-form";
 import { Ring } from '@uiball/loaders';
 import { SendInvitation } from '../../apis/SendInvitation';
 import socket from '../../apis/socket';
+import UpdateInput from '../UpdateInput';
 
 function NavInfoChannel({ groupInfo, visible, funHandle }) {
     const [addMember, setAddMember] = useState(false)
@@ -21,6 +22,7 @@ function NavInfoChannel({ groupInfo, visible, funHandle }) {
         reset,
         formState: { errors },
     } = useForm();
+    
     const SubmitForm = async (data) => {
         setLoaderInvitation(true)
         const res = await SendInvitation(groupId, data.email)
@@ -47,8 +49,8 @@ function NavInfoChannel({ groupInfo, visible, funHandle }) {
                 </div>
                 <div className={styles.containerNavInfoChannel}>
                     <div className={styles.containerTitleAndInfo}>
-                        <h3>{groupInfo.name}</h3>
-                        <p>{groupInfo.description}</p>
+                        <UpdateInput visible={visible} fontSize={20} value={groupInfo.name} />
+                        <UpdateInput visible={visible} fontSize={16} value={groupInfo.description} />
                     </div>
                     <div className={styles.containerMembers}>
                         <div className={styles.containerAddMember}>

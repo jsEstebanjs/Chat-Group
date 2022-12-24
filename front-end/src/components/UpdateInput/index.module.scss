@@ -1,0 +1,46 @@
+@import '../../styles/abstracts/variables.scss';
+
+.mainContainerUpdateInput{
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    height: 100%;
+    align-items: center;
+    justify-content: space-between;
+    gap: 5px;
+    word-break: break-all;
+    margin-bottom: 10px;
+    &:hover span{
+        visibility: visible;
+    }
+    p{
+        font-size: 20px;
+    }
+    span{
+        display: flex;
+        cursor: pointer;
+        font-size: 24px;
+        color: $Blue;
+        align-items: center;
+        justify-content: center;
+        width: max-content;
+        height: max-content;
+        visibility: hidden;
+    }
+    textarea{
+        resize: none;
+        font-family: 'Segoe UI', 'Roboto', 'Oxygen',
+        'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue';
+        width: 100%;
+        height: auto;
+        background-color: transparent;
+        border: none;
+        outline: none;
+        border-bottom: 1px solid $Text-Black;
+        color: $White;
+        overflow: hidden;
+    }
+    .containerCheck{
+        visibility: visible;
+    }
+}

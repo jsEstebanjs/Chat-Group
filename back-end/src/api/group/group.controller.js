@@ -46,8 +46,8 @@ module.exports = {
         throw new Error("The group does not exist");
       }
       res
-      .status(200)
-      .json({ message: "group found",group })
+        .status(200)
+        .json({ message: "group found", group })
 
     } catch (err) {
       res
@@ -55,5 +55,25 @@ module.exports = {
         .json({ message: "could not find group", error: err });
     }
 
-  }
+  },
+  async update(req, res) {
+    try {
+      const user = await User.findById(req.user);
+      const data = req.body;
+      const { id } = req.params
+      if (!user) {
+        throw new Error("non-existent user");
+      }
+      if (!user.groupsOwnerId.includes(id)) {
+        throw new Error("you are not admin")
+      }
+      res
+        .status(200)
+        .json({ message: "group update", data: group });
+    } catch (err) {
+      res
+        .status(400)
+        .json({ message: "could not update group", error: err });
+    }
+  },
 }
