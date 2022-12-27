@@ -3,7 +3,7 @@ import { DeleteInvitation } from '../../apis/DeleteInvitation';
 import { Ring } from '@uiball/loaders'
 import { useState } from 'react';
 import { AcceptInvitation } from '../../apis/AcceptInvitation';
-import { pushNewGroup } from '../../store/userSlice';
+import { acceptGroup } from '../../store/userSlice';
 import { useDispatch } from 'react-redux'
 import socket from '../../apis/socket'
 
@@ -21,7 +21,7 @@ function ModalInvitations({ reload, name, invitationId }) {
         setLoader(true)
         const res = await AcceptInvitation(invitationId)
         socket.emit("join_room", res.data.data._id);
-        dispatch(pushNewGroup({ name: res.data.data.name, _id: res.data.data._id }))
+        dispatch(acceptGroup({ name: res.data.data.name, _id: res.data.data._id }))
         await socket.emit("update_group",res.data.data)
         reload()
         setLoader(false)

@@ -26,7 +26,7 @@ export const userSlice = createSlice({
       })
 
     },
-    pushNewGroup: (state, action) => {
+    createNewGroup: (state, action) => {
       state.groupsId.unshift(action.payload)
       state.groupsOwnerId.unshift(action.payload._id)
     },
@@ -35,10 +35,13 @@ export const userSlice = createSlice({
         ...state,
         ...initialState
       }
+    },
+    acceptGroup:(state,action)=>{
+      state.groupsId.unshift(action.payload)
     }
   },
 })
 
-export const { setInitialState, resetState, pushNewGroup, editGroupUser } = userSlice.actions
+export const { setInitialState, resetState, createNewGroup, editGroupUser, acceptGroup } = userSlice.actions
 
 export default userSlice.reducer

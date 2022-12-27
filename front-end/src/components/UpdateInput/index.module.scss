@@ -64,3 +64,14 @@
         font-size: 16px;
     }
 }
+@media(max-width:700px){
+
+.containerColum{
+    .mainContainerUpdateInput{
+        span{
+            visibility: visible;
+        }
+    }
+
+}
+}

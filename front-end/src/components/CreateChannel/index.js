@@ -4,7 +4,7 @@ import { CreateGroup } from '../../apis/CreateGroup';
 import { Ring } from '@uiball/loaders';
 import { useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { pushNewGroup } from '../../store/userSlice';
+import { createNewGroup } from '../../store/userSlice';
 import socket from '../../apis/socket';
 
 function CreateChannel({ handle, visible }) {
@@ -22,7 +22,7 @@ function CreateChannel({ handle, visible }) {
         setLoader(true)
         const res = await CreateGroup(data);
         if (res?.data?.data?.name) {
-            dispatch(pushNewGroup({ name: res.data.data.name, _id: res.data.data._id }))
+            dispatch(createNewGroup({ name: res.data.data.name, _id: res.data.data._id }))
             socket.emit("join_room", res.data.data._id);
             handle()
             reset({ name: "", description: "" })

@@ -1,6 +1,6 @@
 import styles from './index.module.scss'
 import { MdAdd, MdKeyboardArrowDown, MdAccountCircle, MdLogout, MdClose, MdSearch, MdGroupAdd } from "react-icons/md";
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import CreateChannel from '../CreateChannel';
 import ModalChannel from '../ModalChannel';
 import { useDispatch, useSelector } from 'react-redux';
@@ -8,14 +8,41 @@ import { resetState } from '../../store/userSlice';
 import { useNavigate } from 'react-router-dom';
 import Cookies from 'js-cookie';
 import MyInvitations from '../MyInvitations';
+import axios from 'axios';
+import { Ring } from '@uiball/loaders'
 
 function NavUserAndChannels({ funHandle, visible }) {
     const [modalSettingsUser, setModalSettingsUser] = useState(false)
     const [modalNewChannel, setModalNewChannel] = useState(false)
     const [myInvitations, setMyInvitations] = useState(false)
+    const [invitations, setInvitations] = useState([])
+    const [loaderInvitations, setLoaderInvitations] = useState(true)
+    const [fetch, setFetch] = useState(false)
     const dispatch = useDispatch()
     const navigate = useNavigate()
     const user = useSelector((state) => state.userSlice)
+
+    useEffect(() => {
+        setLoaderInvitations(true)
+        axios
+            .get(`${process.env.REACT_APP_URL_BACK}/invitation`, {
+                headers: {
+                    Authorization: `Bearer ${Cookies.get("token")}`,
+                },
+            })
+            .then((res) => {
+                setInvitations(res.data.data)
+            })
+            .catch((err) => {
+            })
+            .finally(() => {
+                setLoaderInvitations(false)
+            });
+    }, [fetch])
+
+    const handleFetch = () => {
+        setFetch(!fetch)
+    }
 
     const handleNewChannel = (value) => {
         setModalNewChannel(value)
@@ -29,10 +56,14 @@ function NavUserAndChannels({ funHandle, visible }) {
     const handleMyInvitations = (value) => {
         setMyInvitations(value)
     }
+
+    const pushInvitation = (data) => {
+        setInvitations((list) => [...list, data])
+    }
     return (
         <>
             <div onClick={() => funHandle(false)} className={`${styles.opacity} ${visible ? styles.opacityVisible : null}`}></div>
-            <MyInvitations  handle={handleMyInvitations} visible={myInvitations} />
+            <MyInvitations pushInvitation={pushInvitation} loaderInvitations={loaderInvitations} invitations={invitations} reload={handleFetch} handle={handleMyInvitations} visible={myInvitations} />
             <CreateChannel visible={modalNewChannel} handle={handleNewChannel} />
             <div className={`${styles.mainContainerNavUserAndChannels} ${visible ? styles.mainContainerNavUserAndChannelsVisible : null}`}>
                 <div className={styles.containerChannelsTitle}>
@@ -90,6 +121,17 @@ function NavUserAndChannels({ funHandle, visible }) {
                         }} className={styles.containerSettingsUser}>
                             <span><MdGroupAdd /></span>
                             <p>My invitations</p>
+                            {loaderInvitations
+                                ?
+                                <p className={styles.pInvitations}><Ring size={16} color="#2F80ED" /></p>
+                                :
+                                invitations.length > 0
+                                ?
+                                <p className={styles.pInvitations}>{invitations.length}</p>
+                                :
+                                null
+                            }
+
                         </div>
                         <span className={styles.borderSettingsUser}></span>
                         <div onClick={() => {

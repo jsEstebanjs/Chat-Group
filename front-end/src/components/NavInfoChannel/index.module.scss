@@ -42,7 +42,9 @@
   .containerNavInfoChannel {
     display: flex;
     flex-direction: column;
-    padding: 10px 20px;
+    justify-content: space-between;
+    height: 100%;
+    padding: 10px 0px 20px 0px;
     overflow-y: auto;
     
     &::-webkit-scrollbar{
@@ -156,6 +158,35 @@
         .errorSendInvitation{
           font-size: 16px;
           margin-bottom: 10px;
+        }
+      }
+    }
+    .containerInfoAndMembers{
+        padding: 0 20px;
+    }
+    .mainContainerLeaveGroup{
+      display: flex;
+      flex-direction: column;
+      width: 100%;
+      align-items: center;
+      .containerLeaveGroup{
+        display: flex;
+        width: 100%;
+        flex-direction: row;
+        color: $Red;
+        cursor: pointer;
+        padding: 10px 20px;
+        &:hover{
+          background-color: $Hover-Black;
+        }
+        p{
+          font-size: 18px;
+        }
+        span{
+          display: flex;
+          align-items: center;
+          margin-right: 10px;
+          font-size: 24px;
         }
       }
     }

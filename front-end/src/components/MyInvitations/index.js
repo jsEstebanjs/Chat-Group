@@ -5,44 +5,19 @@ import axios from 'axios';
 import Cookies from 'js-cookie';
 import { Ring } from '@uiball/loaders'
 import socket from '../../apis/socket';
+import { MdOutlineWatchLater } from "react-icons/md";
 
-function MyInvitations({ handle, visible }) {
-    const [invitations, setInvitations] = useState([])
-    const [loaderInvitations, setLoaderInvitations] = useState(true)
-    const [fetch, setFetch] = useState(false)
-
-    useEffect(() => {
-        setLoaderInvitations(true)
-        axios
-            .get(`${process.env.REACT_APP_URL_BACK}/invitation`, {
-                headers: {
-                    Authorization: `Bearer ${Cookies.get("token")}`,
-                },
-            })
-            .then((res) => {
-                setInvitations(res.data.data)
-            })
-            .catch((err) => {
-                console.log(err)
-            })
-            .finally(() => {
-                setLoaderInvitations(false)
-            });
-    }, [fetch])
-
+function MyInvitations({ handle, visible, reload, invitations, loaderInvitations, pushInvitation }) {
 
     useEffect(() => {
         socket.on("receive_invitation", (data) => {
-            setInvitations((list) => [...list, data])
+            pushInvitation(data)
         });
-        return()=>{
+        return () => {
             socket.off("receive_invitation")
         }
     }, [socket]);
 
-    const handleFetch = () => {
-        setFetch(!fetch)
-    }
     return (
         <div className={`${styles.mainContainerMyInvitations} ${visible ? styles.mainContainerMyInvitationsVisible : null}`}>
             <div onClick={() => handle(false)} className={styles.opacity}></div>
@@ -53,9 +28,16 @@ function MyInvitations({ handle, visible }) {
                         ?
                         <Ring size={40} color="#120F13" />
                         :
+                        invitations.length > 0
+                        ?
                         invitations.map((item) => (
-                            <ModalInvitations reload={handleFetch} key={item._id} invitationId={item._id} name={item.nameGroup} />
+                            <ModalInvitations reload={reload} key={item._id} invitationId={item._id} name={item.nameGroup} />
                         ))
+                        :
+                        <div className={styles.containerWaitingInvitations}>
+                            <span><MdOutlineWatchLater/></span>
+                            <p>Waiting for invitations...</p>
+                        </div>
                     }
                 </div>
 
