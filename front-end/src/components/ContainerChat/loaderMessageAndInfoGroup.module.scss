@@ -1,3 +1,4 @@
+@import '../../styles/abstracts/variables.scss';
 .mainContainerLoaderMessageAndInfoGroup{
     display: flex;
     flex-direction: column;
@@ -6,6 +7,8 @@
     align-items: center;
     justify-content: center;
     p{
+        color: $White;
+        font-size: 20px;
         margin: 10px 0;
     }
 }

@@ -10,6 +10,7 @@ import socket from '../../apis/socket'
 function ModalInvitations({ reload, name, invitationId }) {
     const [loader, setLoader] = useState(false);
     const dispatch = useDispatch()
+
     const handleDelete = async () => {
         setLoader(true)
         const res = await DeleteInvitation(invitationId)
@@ -19,9 +20,9 @@ function ModalInvitations({ reload, name, invitationId }) {
     const handleAccept = async () => {
         setLoader(true)
         const res = await AcceptInvitation(invitationId)
-        console.log(res.data.data)
+        socket.emit("join_room", res.data.data._id);
         dispatch(pushNewGroup({ name: res.data.data.name, _id: res.data.data._id }))
-        await socket.emit("add_new_user_group",res.data.data)
+        await socket.emit("update_group",res.data.data)
         reload()
         setLoader(false)
     }

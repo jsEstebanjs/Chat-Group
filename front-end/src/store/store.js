@@ -1,10 +1,10 @@
 import { configureStore } from '@reduxjs/toolkit'
 import userReducer from './userSlice';
-import channelIdReducer from './channelIdSlice'
+import groupReducer from './groupSlice'
 
 export const store = configureStore({
   reducer: {
-    userSlice:userReducer,
-    channelIdSlice:channelIdReducer
+    userSlice: userReducer,
+    groupSlice: groupReducer
   },
 })

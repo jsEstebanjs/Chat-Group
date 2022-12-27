@@ -1,14 +1,14 @@
 import styles from './index.module.scss';
-import { setId } from '../../store/channelIdSlice';
+import { setInitialStateGroup } from '../../store/groupSlice';
 import { useDispatch } from 'react-redux';
 
-function ModalChannel({ funHandle,id, name }) {
+function ModalChannel({ funHandle, id, name }) {
     const dispatch = useDispatch()
     return (
         <div onClick={() => {
-            dispatch(setId(id))
+            dispatch(setInitialStateGroup({_id:id}))
             funHandle(false)
-            }} className={styles.mainContainerModalChannel}>
+        }} className={styles.mainContainerModalChannel}>
             <div className={styles.containerImgChannel}>
                 {
                     name.trim().split(" ").length === 1

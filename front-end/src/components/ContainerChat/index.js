@@ -6,19 +6,21 @@ import Logo from '../../images/chat-icon.png'
 import Chat from "./Chat";
 import { MdMoreVert } from "react-icons/md";
 import NavInfoChannel from "../NavInfoChannel";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { GetGroup } from "../../apis/GetGroup";
 import LoaderMessageAndInfoGroup from "./LoaderMessageAndInfoGroup";
 import socket from "../../apis/socket";
 import { GetMessages } from '../../apis/GetMessages'
+import { setInitialStateGroup } from "../../store/groupSlice";
+import { editGroupUser } from "../../store/userSlice";
 
 function ContainerChat() {
     const [modalChannels, setModalChannels] = useState(false)
     const [modalInfoChannel, setModalInfoChannel] = useState(false)
-    const [groupInfo, setGroupInfo] = useState({})
     const [loaderMessagesAndGroup, setLoaderMessagesAndGroup] = useState(false)
     const [messages, setMessages] = useState([])
-    const channelId = useSelector((state) => state.channelIdSlice.id)
+    const group = useSelector((state) => state.groupSlice)
+    const dispatch = useDispatch()
 
     const handleModalChannels = (value) => {
         setModalChannels(value)
@@ -28,32 +30,37 @@ function ContainerChat() {
     }
     useEffect(() => {
         const getGroup = async () => {
-            const res = await GetGroup(channelId);
+            console.log("entro a actualizar el grupo")
+            const res = await GetGroup(group._id);
             if (res?.data?.group?.name) {
-                setGroupInfo(res.data.group)
-                const resMessage = await GetMessages(15, 1, channelId)
+                const { usersId, ownerId, name, messages, description } = res.data.group
+                dispatch(setInitialStateGroup({ usersId, ownerId, name, messages, description }))
+                const resMessage = await GetMessages(15, 1, group._id)
                 setMessages(resMessage.data.message.docs)
                 setLoaderMessagesAndGroup(false)
             }
         }
 
-        if (channelId) {
+        if (group._id) {
             setLoaderMessagesAndGroup(true)
             getGroup()
         }
 
-    }, [channelId])
+    }, [group._id])
 
     useEffect(() => {
-        socket.on("add_user_group", (data) => {
-            setGroupInfo((groupInfo) => ({
-                ...groupInfo,
-                usersId: data
-
+        socket.on("emit_update_group", (data) => {
+            dispatch(editGroupUser({ _id: data._id, name: data.name }))
+            dispatch(setInitialStateGroup({
+                usersId: data.usersId,
+                ownerId: data.ownerId,
+                name: data.name,
+                messages: data.messages,
+                description: data.description,
             }))
         })
         return () => {
-            socket.off("add_user_group")
+            socket.off("emit_update_group")
         }
     }, [socket])
 
@@ -68,12 +75,12 @@ function ContainerChat() {
             <div className={styles.containerChatContainer}>
                 {
                     !loaderMessagesAndGroup ?
-                        <div className={`${groupInfo.name ? styles.containerNavChatContainer : styles.containerNavChatContainerDefault}`}>
+                        <div className={`${group.name ? styles.containerNavChatContainer : styles.containerNavChatContainerDefault}`}>
                             <div className={styles.containerArrowAndTitle}>
                                 <span onClick={() => handleModalChannels(true)}><MdKeyboardArrowLeft /></span>
-                                <h2>{groupInfo.name ? groupInfo.name.trim() : "Channels"}</h2>
+                                <h2>{group.name ? group.name.trim() : "Channels"}</h2>
                             </div>
-                            {groupInfo.name ?
+                            {group.name ?
                                 <span onClick={() => handleModalInfoChannel(true)}><MdMoreVert /></span>
                                 :
                                 null
@@ -83,7 +90,7 @@ function ContainerChat() {
                         null
                 }
 
-                {!channelId
+                {!group._id
                     ?
                     <div className={styles.containerDefaultChat}>
                         <img src={Logo} alt='logo' />
@@ -97,7 +104,7 @@ function ContainerChat() {
                         :
                         <Chat addNewMessage={addNewMessage} messages={messages} />
                 }
-                <NavInfoChannel groupInfo={groupInfo} visible={modalInfoChannel} funHandle={handleModalInfoChannel} />
+                <NavInfoChannel visible={modalInfoChannel} funHandle={handleModalInfoChannel} />
             </div>
         </div>
     )

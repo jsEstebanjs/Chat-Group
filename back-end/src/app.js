@@ -26,11 +26,10 @@ io.on('connection', (socket) => {
   });
 
   socket.on("send_message", (data) => {
-    console.log("grupo",data.groupId)
     socket.to(data.groupId).emit("receive_message", data);
   });
-  socket.on("add_new_user_group", (data) => {
-    socket.to(data._id).emit("add_user_group", data.usersId);
+  socket.on("update_group", (data) => {
+    socket.to(data._id).emit("emit_update_group", data);
   })
 
   socket.on("waiting_for_invitations", (data) => {
@@ -42,7 +41,7 @@ io.on('connection', (socket) => {
   })
 
   socket.on("disconnect", () => {
-    console.log("User Disconnected", socket.id);
+    // console.log("User Disconnected", socket.id);
   });
 
 

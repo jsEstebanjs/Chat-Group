@@ -10,12 +10,12 @@ import { SendInvitation } from '../../apis/SendInvitation';
 import socket from '../../apis/socket';
 import UpdateInput from '../UpdateInput';
 
-function NavInfoChannel({ groupInfo, visible, funHandle }) {
+function NavInfoChannel({ visible, funHandle }) {
     const [addMember, setAddMember] = useState(false)
     const [loaderInvitation, setLoaderInvitation] = useState(false)
     const [errorSendInvitation, setErrorSendInvitation] = useState("")
     const userGroupsOwnerId = useSelector((state) => state.userSlice.groupsOwnerId)
-    const groupId = useSelector((state) => state.channelIdSlice.id)
+    const group = useSelector((state) => state.groupSlice)
     const {
         register,
         handleSubmit,
@@ -25,7 +25,7 @@ function NavInfoChannel({ groupInfo, visible, funHandle }) {
     
     const SubmitForm = async (data) => {
         setLoaderInvitation(true)
-        const res = await SendInvitation(groupId, data.email)
+        const res = await SendInvitation(group._id, data.email)
         setLoaderInvitation(false)
         if (res?.response?.data?.error) {
             setErrorSendInvitation(res.response.data.error)
@@ -49,14 +49,14 @@ function NavInfoChannel({ groupInfo, visible, funHandle }) {
                 </div>
                 <div className={styles.containerNavInfoChannel}>
                     <div className={styles.containerTitleAndInfo}>
-                        <UpdateInput visible={visible} fontSize={20} value={groupInfo.name} />
-                        <UpdateInput visible={visible} fontSize={16} value={groupInfo.description} />
+                        <UpdateInput keyUpdate="name" maxLength={25} visible={visible} fontSize={20} value={group.name} />
+                        <UpdateInput keyUpdate="description" maxLength={300} visible={visible} fontSize={16} value={group.description} />
                     </div>
                     <div className={styles.containerMembers}>
                         <div className={styles.containerAddMember}>
                             <h3>MEMBERS</h3>
                             {
-                                userGroupsOwnerId.includes(groupId) ?
+                                userGroupsOwnerId.includes(group._id) ?
                                     <span onClick={() => setAddMember(!addMember)} className={`${addMember ? styles.iconAdd : null}`}><MdAdd /></span>
                                     :
                                     null
@@ -86,8 +86,8 @@ function NavInfoChannel({ groupInfo, visible, funHandle }) {
                             }
                         </form >
                         {
-                            groupInfo?.usersId?.map((item) => (
-                                <ModalMembers owner={item._id === groupInfo.ownerId} key={item._id} name={item.name} />
+                            group.usersId.map((item) => (
+                                <ModalMembers owner={item._id === group.ownerId} key={item._id} name={item.name} />
                             ))
 
                         }

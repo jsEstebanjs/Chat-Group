@@ -46,7 +46,8 @@
             flex-direction: column;
             width: 100%;
             word-wrap: break-word;
-            p{
+            .message{
+                color: $White;
                 font-size: 18px;
                 font-weight: 400;
                 line-height: 24px;

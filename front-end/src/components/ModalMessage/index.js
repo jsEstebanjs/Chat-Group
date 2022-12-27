@@ -24,7 +24,7 @@ function ModalMessage({ name, date, message }) {
                         {`${newDate.getDate()}/${newDate.getMonth() + 1}/${newDate.getFullYear()} at ${newDate.getHours()}:${newDate.getMinutes() < 10 ? "0" + newDate.getMinutes() : newDate.getMinutes()}`}</p>
                 </div>
                 <div className={styles.containerMessage}>
-                    <p>{message}</p>
+                    <p className={styles.message}>{message}</p>
                 </div>
             </div>
 

@@ -5,6 +5,7 @@ const { auth } = require("../../utils/auth");
 
 router.route("/").post(auth, groupController.create);
 router.route("/:id").get(auth, groupController.listById);
+router.route("/:id").put(auth, groupController.update);
 
 
 

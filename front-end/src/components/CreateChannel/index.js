@@ -5,6 +5,7 @@ import { Ring } from '@uiball/loaders';
 import { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { pushNewGroup } from '../../store/userSlice';
+import socket from '../../apis/socket';
 
 function CreateChannel({ handle, visible }) {
     const [loader, setLoader] = useState(false)
@@ -22,6 +23,7 @@ function CreateChannel({ handle, visible }) {
         const res = await CreateGroup(data);
         if (res?.data?.data?.name) {
             dispatch(pushNewGroup({ name: res.data.data.name, _id: res.data.data._id }))
+            socket.emit("join_room", res.data.data._id);
             handle()
             reset({ name: "", description: "" })
         } else {
@@ -68,9 +70,13 @@ function CreateChannel({ handle, visible }) {
                         <div className={styles.containerInputsAndErrors}>
                             <textarea placeholder='Channel Description' {...register("description", {
                                 required: true,
+                                maxLength: 300
                             })} />
                             {errors.description?.type === "required" && (
                                 <p className={styles.errorP}>The channel description is required</p>
+                            )}
+                            {errors.description?.type === "maxLength" && (
+                                <p className={styles.errorP}>Maximum length of 300</p>
                             )}
                         </div>
                         {error

@@ -11,14 +11,14 @@ import { Ring } from '@uiball/loaders'
 function Chat({ messages, addNewMessage }) {
     const [valueMessage, setValueMessage] = useState("")
     const [loaderMessage, setLoaderMessage] = useState(false)
-    const group = useSelector((state) => state.channelIdSlice.id)
+    const groupId = useSelector((state) => state.groupSlice._id)
 
     const handleMessage = async (e) => {
         e.preventDefault()
         if (valueMessage.trim() !== "") {
                 setLoaderMessage(true)
                 setValueMessage("")
-                const res = await CreateMessage({ groupId: group, message: encryptData(valueMessage) })
+                const res = await CreateMessage({ groupId: groupId, message: encryptData(valueMessage) })
                 await socket.emit("send_message", res.data.data);
                 addNewMessage(res.data.data)
                 setLoaderMessage(false)
@@ -26,7 +26,7 @@ function Chat({ messages, addNewMessage }) {
     }
     useEffect(() => {
         socket.on("receive_message", (data) => {
-            if (data.groupId === group) {
+            if (data.groupId === groupId) {
                 addNewMessage(data);
             }
         })

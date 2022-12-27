@@ -67,9 +67,15 @@ module.exports = {
       if (!user.groupsOwnerId.includes(id)) {
         throw new Error("you are not admin")
       }
+      const updateGroup = await Group.findByIdAndUpdate(id, data, {
+        new: true,
+      }).populate({
+        path: "usersId",
+        select: "_id name"
+      })
       res
         .status(200)
-        .json({ message: "group update", data: group });
+        .json({ message: "group update", data: updateGroup });
     } catch (err) {
       res
         .status(400)

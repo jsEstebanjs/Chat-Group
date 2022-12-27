@@ -10,6 +10,7 @@ const groupSchema = new Schema(
         description: {
             type: String,
             required: [true, "Description is required"],
+            maxlength: [300,"Maximum length of 300"]
         },
         favicon: {
             type: String,
