@@ -30,11 +30,10 @@ function ContainerChat() {
     }
     useEffect(() => {
         const getGroup = async () => {
-            console.log("entro a actualizar el grupo")
             const res = await GetGroup(group._id);
             if (res?.data?.group?.name) {
-                const { usersId, ownerId, name, messages, description } = res.data.group
-                dispatch(setInitialStateGroup({ usersId, ownerId, name, messages, description }))
+                const { usersId, ownersId, name, messages, description } = res.data.group
+                dispatch(setInitialStateGroup({ usersId, ownersId, name, messages, description }))
                 const resMessage = await GetMessages(15, 1, group._id)
                 setMessages(resMessage.data.message.docs)
                 setLoaderMessagesAndGroup(false)
@@ -50,10 +49,11 @@ function ContainerChat() {
 
     useEffect(() => {
         socket.on("emit_update_group", (data) => {
+            console.log(data)
             dispatch(editGroupUser({ _id: data._id, name: data.name }))
             dispatch(setInitialStateGroup({
                 usersId: data.usersId,
-                ownerId: data.ownerId,
+                ownersId: data.ownersId,
                 name: data.name,
                 messages: data.messages,
                 description: data.description,

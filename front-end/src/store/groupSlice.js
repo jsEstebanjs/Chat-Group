@@ -3,7 +3,7 @@ import { createSlice } from '@reduxjs/toolkit'
 const initialState = {
     _id:"",
     usersId:[],
-    ownerId:"",
+    ownersId:[],
     name:"",
     messages:[], 
     description:""
@@ -19,9 +19,15 @@ export const groupSlice = createSlice({
         ...action.payload,
       };
     },
+    resetToInitialStateGroup: (state,action) => {
+      return {
+        ...state,
+        ...action.payload,
+      };
   },
+}
 })
 
-export const { setInitialStateGroup } = groupSlice.actions
+export const { setInitialStateGroup ,resetToInitialStateGroup} = groupSlice.actions
 
 export default groupSlice.reducer

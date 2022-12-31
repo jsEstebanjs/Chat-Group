@@ -32,7 +32,7 @@ module.exports = {
             if (!group) {
                 throw new Error("The group does not exist");
             }
-            if (group.ownerId.toString() !== req.user) {
+            if (!group.ownersId.includes(req.user)) {
                 throw new Error("You are not group administrator");
             }
             if (!guestUser[0]) {

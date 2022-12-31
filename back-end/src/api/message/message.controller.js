@@ -9,6 +9,9 @@ module.exports = {
             const data = req.body;
             const group = await Group.findById(data.groupId)
 
+            if(!group.usersId.includes(req.user)){
+                throw new Error("You don't belong to the group")
+            }
             if (!user) {
                 throw new Error("non-existent user");
             }

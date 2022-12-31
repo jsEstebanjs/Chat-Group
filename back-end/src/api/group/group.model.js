@@ -23,10 +23,10 @@ const groupSchema = new Schema(
             type: Schema.Types.ObjectId,
             ref: "message"
         }],
-        ownerId:{
+        ownersId:[{
             type: Schema.Types.ObjectId,
             ref: "user"
-        }
+        }]
     },
     {
         timestamps: true,

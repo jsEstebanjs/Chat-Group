@@ -9,6 +9,7 @@ import { Ring } from '@uiball/loaders';
 import { SendInvitation } from '../../apis/SendInvitation';
 import socket from '../../apis/socket';
 import UpdateInput from '../UpdateInput';
+import { LeaveTheGroup } from '../../apis/LeaveTheGroup';
 
 function NavInfoChannel({ visible, funHandle }) {
     const [addMember, setAddMember] = useState(false)
@@ -39,6 +40,12 @@ function NavInfoChannel({ visible, funHandle }) {
 
         }
     };
+    const handleLeaveTheGroup = async (id) => {
+        const res = await LeaveTheGroup(id)
+        console.log(res)
+        await socket.emit("update_group", res.data.data)
+
+    }
     return (
         <>
             <div onClick={() => funHandle(false)} className={`${styles.opacity} ${visible ? styles.opacityVisible : null}`}></div>
@@ -88,14 +95,14 @@ function NavInfoChannel({ visible, funHandle }) {
                             </form >
                             {
                                 group.usersId.map((item) => (
-                                    <ModalMembers owner={item._id === group.ownerId} key={item._id} name={item.name} />
+                                    <ModalMembers owner={group.ownersId.includes(item._id)} key={item._id} name={item.name} />
                                 ))
 
                             }
                         </div>
                     </div>
                     <div className={styles.mainContainerLeaveGroup}>
-                        <div className={styles.containerLeaveGroup}>
+                        <div onClick={() => handleLeaveTheGroup(group._id)} className={styles.containerLeaveGroup}>
                             <span><MdLogout /></span>
                             <p>Leave the group</p>
                         </div>
