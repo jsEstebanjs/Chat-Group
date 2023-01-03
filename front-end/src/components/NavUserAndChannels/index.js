@@ -10,6 +10,7 @@ import Cookies from 'js-cookie';
 import MyInvitations from '../MyInvitations';
 import axios from 'axios';
 import { Ring } from '@uiball/loaders'
+import { useOutsideClick } from '../../hooks/useOutsideClick';
 
 function NavUserAndChannels({ funHandle, visible }) {
     const [modalSettingsUser, setModalSettingsUser] = useState(false)
@@ -21,7 +22,7 @@ function NavUserAndChannels({ funHandle, visible }) {
     const dispatch = useDispatch()
     const navigate = useNavigate()
     const user = useSelector((state) => state.userSlice)
-
+    const ref = useOutsideClick(setModalSettingsUser)
     useEffect(() => {
         setLoaderInvitations(true)
         axios
@@ -82,7 +83,7 @@ function NavUserAndChannels({ funHandle, visible }) {
                             <ModalChannel funHandle={funHandle} key={item._id} id={item._id} name={item.name} />
                         ))}
                     </div>
-                    <div className={styles.containerUserInfo}>
+                    <div  className={styles.containerUserInfo}>
                         {
                             user.picture
                                 ?
@@ -107,8 +108,8 @@ function NavUserAndChannels({ funHandle, visible }) {
 
                         <div className={styles.containerUserInfoNameAndArrow}>
                             <h3>{user.name}</h3>
-                            <button className={`${modalSettingsUser ? styles.buttonRotate : null}`} onClick={() => setModalSettingsUser(!modalSettingsUser)}><MdKeyboardArrowDown /></button>
-                        </div>
+                            <button ref={ref} className={`${modalSettingsUser ? styles.buttonRotate : null}`} onClick={() => setModalSettingsUser(!modalSettingsUser)}><MdKeyboardArrowDown /></button>
+                        </div >
                     </div>
                     <div className={`${styles.mainContainerSettingsUser} ${modalSettingsUser ? styles.mainContainerSettingsUserVisibility : null}`}>
                         <div onClick={() => setModalSettingsUser(!modalSettingsUser)} className={styles.containerSettingsUser}>

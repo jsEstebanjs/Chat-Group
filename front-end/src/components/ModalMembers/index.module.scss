@@ -1,33 +1,80 @@
-@import '../../styles/abstracts/variables.scss';
+@import "../../styles/abstracts/variables.scss";
 .mainContainerModalMembers {
   display: flex;
   flex-direction: row;
   align-items: center;
   margin-bottom: 10px;
-  .containerImgChannel {
+  justify-content: space-between;
+  position: relative;
+  .containerImgAndName {
     display: flex;
-    background-color: $Hover-Black;
-    margin-right: 10px;
-    border-radius: 8px;
-    padding: 10px;
-    font-size: 18px;
-    font-weight: 700;
-    width: 47px;
-    align-items: center;
-    justify-content: center;
-  }
-  .containerNameAndOwner{
-    p {
-      color: $Text-Black;
+    flex-direction: row;
+    width: 90%;
+    .containerImgChannel {
+      display: flex;
+      background-color: $Hover-Black;
+      margin-right: 10px;
+      border-radius: 8px;
+      padding: 10px;
       font-size: 18px;
       font-weight: 700;
-      text-overflow: ellipsis;
-      white-space: nowrap;
-      overflow: hidden;
+      width: 47px;
+      align-items: center;
+      justify-content: center;
     }
-    .admin{
-      color: $Blue;
-      font-size: 14px;
+    .containerNameAndOwner {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      overflow: hidden;
+      p {
+        color: $Text-Black;
+        font-size: 18px;
+        font-weight: 700;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        overflow: hidden;
+      }
+      .admin {
+        color: $Blue;
+        font-size: 14px;
+      }
+    }
+  }
+  .containerBtnOptionsAdmin {
+    width: 10%;
+    span {
+      display: flex;
+      align-items: center;
+      font-size: 28px;
+      cursor: pointer;
+    }
+  }
+  .containerOptionsAdmin{
+    position: absolute;
+    background-color: $Light-Black;
+    border-radius: 10px;
+    z-index: 1;
+    right: 0;
+    bottom: -50px;
+    .containerLoader{
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: absolute;
+      top: 0;
+      left: 0;
+      bottom: 0;
+      right: 0;
+      opacity: 0.6;
+      background-color: $Black;
+    }
+    p{
+      padding: 5px 10px;
+      &:hover{
+        background-color: $Hover-Black;
+        cursor: pointer;
+      }
     }
   }
 }

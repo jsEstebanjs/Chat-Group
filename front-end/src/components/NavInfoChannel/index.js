@@ -1,7 +1,7 @@
 import styles from './index.module.scss';
 import { MdClose } from "react-icons/md";
 import ModalMembers from '../ModalMembers';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { MdAdd, MdLogout, MdDelete } from "react-icons/md";
 import { useState } from 'react';
 import { useForm } from "react-hook-form";
@@ -10,13 +10,21 @@ import { SendInvitation } from '../../apis/SendInvitation';
 import socket from '../../apis/socket';
 import UpdateInput from '../UpdateInput';
 import { LeaveTheGroup } from '../../apis/LeaveTheGroup';
+import { resetToInitialStateGroup } from '../../store/groupSlice';
+import { DeleteGroup } from '../../apis/DeleteGroup';
+import { validateToken } from '../../apis/ValidateToken';
+import { setInitialState } from '../../store/userSlice';
 
 function NavInfoChannel({ visible, funHandle }) {
     const [addMember, setAddMember] = useState(false)
     const [loaderInvitation, setLoaderInvitation] = useState(false)
     const [errorSendInvitation, setErrorSendInvitation] = useState("")
+    const [leaveGroup, setLeaveGroup] = useState(false)
+    const [deleteGroup, setDeleteGroup] = useState(false)
     const userGroupsOwnerId = useSelector((state) => state.userSlice.groupsOwnerId)
     const group = useSelector((state) => state.groupSlice)
+    const dispatch = useDispatch()
+
     const {
         register,
         handleSubmit,
@@ -41,9 +49,23 @@ function NavInfoChannel({ visible, funHandle }) {
         }
     };
     const handleLeaveTheGroup = async (id) => {
-        const res = await LeaveTheGroup(id)
-        console.log(res)
-        await socket.emit("update_group", res.data.data)
+        if (leaveGroup === false) {
+            setLeaveGroup(true)
+            const res = await LeaveTheGroup(id)
+            await socket.emit("update_group", res.data.data)
+            dispatch(resetToInitialStateGroup())
+            const resUser = await validateToken()
+            dispatch(setInitialState(resUser.data.data));
+            setLeaveGroup(false)
+            funHandle(false)
+        }
+    }
+    const handleDeleteGroup = async (id) => {
+        if (deleteGroup === false) {
+            setDeleteGroup(true)
+            const res = await DeleteGroup(id)
+            setDeleteGroup(false)
+        }
 
     }
     return (
@@ -95,7 +117,7 @@ function NavInfoChannel({ visible, funHandle }) {
                             </form >
                             {
                                 group.usersId.map((item) => (
-                                    <ModalMembers owner={group.ownersId.includes(item._id)} key={item._id} name={item.name} />
+                                    <ModalMembers emailUser={item.email}  idUser={item._id} owner={group.ownersId.includes(item._id)} key={item._id} name={item.name} />
                                 ))
 
                             }
@@ -105,12 +127,26 @@ function NavInfoChannel({ visible, funHandle }) {
                         <div onClick={() => handleLeaveTheGroup(group._id)} className={styles.containerLeaveGroup}>
                             <span><MdLogout /></span>
                             <p>Leave the group</p>
+                            {leaveGroup
+                                ?
+                                <div className={styles.containerLoader}>
+                                    <Ring size={30} color="#2F80ED" />
+                                </div>
+                                :
+                                null}
                         </div>
                         {userGroupsOwnerId.includes(group._id)
                             ?
-                            <div className={styles.containerLeaveGroup}>
+                            <div onClick={() => handleDeleteGroup(group._id)} className={styles.containerLeaveGroup}>
                                 <span><MdDelete /></span>
                                 <p>Delete group</p>
+                                {deleteGroup
+                                    ?
+                                    <div className={styles.containerLoader}>
+                                        <Ring size={30} color="#2F80ED" />
+                                    </div>
+                                    :
+                                    null}
                             </div>
                             :
                             null}

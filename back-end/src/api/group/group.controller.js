@@ -37,7 +37,7 @@ module.exports = {
       const { id } = req.params;
       const group = await Group.findById(id).populate({
         path: "usersId",
-        select: "_id name"
+        select: "_id name email"
       })
       if (!user) {
         throw new Error("non-existent user")
@@ -72,7 +72,7 @@ module.exports = {
         new: true,
       }).populate({
         path: "usersId",
-        select: "_id name"
+        select: "_id name email"
       })
       res
         .status(200)
@@ -87,7 +87,8 @@ module.exports = {
     try {
       const { id } = req.params
       const user = await User.findById(req.user);
-      const group = await Group.findById(id)
+      let group = await Group.findById(id)
+      let deleteGroup = false
 
       const deleteUser = async (user, owner, group) => {
         let index;
@@ -108,12 +109,11 @@ module.exports = {
           group.ownersId.unshift(newOwner.toString())
           newUserOwner.groupsOwnerId.unshift(group._id)
           await newUserOwner.save({ validateBeforeSave: false });
-          await group.save({ validateBeforeSave: false });
         } else if (group.usersId.length === 0) {
           for (let i = 0; i < group.messages.length; i++) {
             const message = await Message.findByIdAndDelete(group.messages[i])
           }
-          const groupDelete = await Group.findByIdAndDelete(group._id)
+          group = await Group.findByIdAndDelete(group._id)
           deleteGroup = true
         }
       }
@@ -130,15 +130,19 @@ module.exports = {
       } else {
         throw new Error("You don't belong to the group");
       }
-      await group.save({ validateBeforeSave: false });
       await user.save({ validateBeforeSave: false });
-      const updateGroup = await Group.findById(id).populate({
-        path: "usersId",
-        select: "_id name"
-      })
+
+      if(!deleteGroup){
+        await group.save({ validateBeforeSave: false });
+         group = await Group.findById(id).populate({
+          path: "usersId",
+          select: "_id name email"
+        })
+      }
+
       res
         .status(200)
-        .json({ message: "You have left the group", data: updateGroup });
+        .json({ message: "You have left the group", data: group });
     } catch (err) {
       console.log(err)
       res
@@ -168,8 +172,12 @@ module.exports = {
       if (group.usersId.includes(idUser)) {
         if (group.ownersId.includes(req.user)) {
           if (action === "ascend") {
-            group.ownersId.unshift(idUser)
-            user.groupsOwnerId.unshift(id)
+            if(!group.ownersId.includes(idUser)){
+              group.ownersId.unshift(idUser)
+              user.groupsOwnerId.unshift(id)
+            }else{
+              throw new Error("The user is already admin")
+            }
           } else if (action === "descend") {
             if (group.ownersId.includes(idUser)) {
               let index = group.ownersId.indexOf(idUser)
@@ -200,17 +208,20 @@ module.exports = {
       } else {
         throw new Error("The user is not in the group");
       }
-
-
       await group.save({ validateBeforeSave: false });
       await user.save({ validateBeforeSave: false });
+
+      const updateGroup = await Group.findById(id).populate({
+        path: "usersId",
+        select: "_id name email"
+      })
       res
         .status(200)
-        .json({ message: "group updated", data: group });
+        .json({ message: "group updated", data: updateGroup });
     } catch (err) {
       res
         .status(400)
-        .json({ message: "Could not update the group", error: err });
+        .json({ message: "Could not update the group", error: err.message });
     }
 
   },
@@ -228,7 +239,9 @@ module.exports = {
       if (!group.ownersId.includes(req.user)) {
         throw new Error("You not are admin");
       }
-
+      for (let i = 0; i < group.messages.length; i++) {
+        const message = await Message.findByIdAndDelete(group.messages[i])
+      }
       const groupDelete = await Group.findByIdAndDelete(group._id)
 
       res
@@ -237,7 +250,7 @@ module.exports = {
     } catch (err) {
       res
         .status(400)
-        .json({ message: "Could not delete the group", error: err });
+        .json({ message: "Could not delete the group", error: err.message });
     }
   }
 }

@@ -1,8 +1,6 @@
 import styles from './index.module.scss';
 import ModalInvitations from './ModalInvitations';
 import { useEffect, useState } from 'react';
-import axios from 'axios';
-import Cookies from 'js-cookie';
 import { Ring } from '@uiball/loaders'
 import socket from '../../apis/socket';
 import { MdOutlineWatchLater } from "react-icons/md";

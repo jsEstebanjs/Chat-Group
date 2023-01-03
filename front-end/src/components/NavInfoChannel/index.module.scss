@@ -176,6 +176,7 @@
         color: $Red;
         cursor: pointer;
         padding: 10px 20px;
+        position: relative;
         &:hover{
           background-color: $Hover-Black;
         }
@@ -187,6 +188,18 @@
           align-items: center;
           margin-right: 10px;
           font-size: 24px;
+        }
+        .containerLoader{
+          position: absolute;
+          top: 0;
+          left: 0;
+          bottom: 0;
+          right: 0;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          background-color: $Hover-Black;
+          opacity: 0.8;;
         }
       }
     }

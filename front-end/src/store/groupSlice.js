@@ -22,7 +22,7 @@ export const groupSlice = createSlice({
     resetToInitialStateGroup: (state,action) => {
       return {
         ...state,
-        ...action.payload,
+        ...initialState,
       };
   },
 }

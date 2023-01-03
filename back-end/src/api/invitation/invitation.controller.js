@@ -120,7 +120,7 @@ module.exports = {
             await group.save({ validateBeforeSave: false });
             const groupUpdate = await Group.findById(invitation.groupId).populate({
                 path: "usersId",
-                select: "_id name"
+                select: "_id name email"
             })
             const invitationDelete = await Invitation.findByIdAndDelete(id)
             res

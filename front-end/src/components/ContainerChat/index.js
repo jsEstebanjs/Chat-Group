@@ -49,7 +49,6 @@ function ContainerChat() {
 
     useEffect(() => {
         socket.on("emit_update_group", (data) => {
-            console.log(data)
             dispatch(editGroupUser({ _id: data._id, name: data.name }))
             dispatch(setInitialStateGroup({
                 usersId: data.usersId,
