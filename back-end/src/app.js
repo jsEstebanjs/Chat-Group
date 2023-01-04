@@ -18,31 +18,62 @@ const io = new Server(server, {
 })
 
 io.on('connection', (socket) => {
-  // console.log(`User Connected: ${socket.id}`);
 
   socket.on("join_room", (data) => {
-    socket.join(data);
-    // console.log(`User with ID: ${socket.id} joined room: ${data}`);
+    try{
+      socket.join(data);
+    }catch(err){
+      console.log(`could not join room ${err}`)
+    }
   });
 
   socket.on("send_message", (data) => {
-    socket.to(data.groupId).emit("receive_message", data);
+    try{
+      socket.to(data.groupId).emit("receive_message", data);
+    }catch(err){
+      console.log(`the message could not be sent ${err}`)
+    }
   });
   socket.on("update_group", (data) => {
-    socket.to(data._id).emit("emit_update_group", data);
+    try{
+      socket.to(data._id).emit("emit_update_group", data);
+    }catch(err){
+      console.log(`could not send update ${err}`)
+    }
+  })
+  socket.on("delete_group", (data) => {
+    try{
+      socket.to(data).emit("emit_delete_group", data);
+    }catch(err){
+      console.log(`could not send deleted group ${err}`)
+    }
   })
 
-  socket.on("waiting_for_invitations", (data) => {
-    socket.join(data)
+  socket.on("waiting_for_user_updates", (data) => {
+    try{
+      socket.join(data)
+    }catch(err){
+      console.log(`could not wait for user updates ${err}`)
+    }
   })
 
-  socket.on("send_invitation", (data) => {
-    socket.to(data.emailUser).emit("receive_invitation", data)
+  socket.on("send_update_user", (data) => {
+    try{
+      socket.to(data.emailUser).emit("receive_update_user", data)
+    }catch(err){
+      console.log(`failed to send user update ${err}`)
+    }
   })
 
-  socket.on("disconnect", () => {
-    // console.log("User Disconnected", socket.id);
-  });
+
+  socket.on("leave_room",(room)=>{
+    try{
+      socket.leave(room);
+    }catch(err){
+      console.log(`could not leave the room ${err}`)
+    }
+
+  })
 
 
 })

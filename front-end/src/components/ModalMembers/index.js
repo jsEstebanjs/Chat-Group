@@ -1,10 +1,12 @@
 import styles from './index.module.scss'
 import { MdKeyboardArrowDown } from "react-icons/md";
-import { useSelector } from 'react-redux';
+import { useSelector,useDispatch } from 'react-redux';
 import { useState } from 'react';
 import { useOutsideClick } from '../../hooks/useOutsideClick';
 import { AdminOptions } from '../../apis/AdminOptions';
 import { Ring } from '@uiball/loaders'
+import socket from '../../apis/socket';
+import { setInitialStateGroup } from '../../store/groupSlice';
 
 function ModalMembers({ name, owner, idUser, emailUser }) {
     const user = useSelector((state) => state.userSlice)
@@ -12,12 +14,16 @@ function ModalMembers({ name, owner, idUser, emailUser }) {
     const [modalOptions, setModalOptions] = useState(false)
     const [loaderOptions, setLoaderOptions] = useState(false)
     const ref = useOutsideClick(setModalOptions)
+    const dispatch = useDispatch()
 
     const handleAdminOptions = async (idUser, action) => {
+        const actionSocket = action === "deleteUser" ? "removed_from_group" : "update_range_group"
         setLoaderOptions(true)
         const res = await AdminOptions(groupId, { idUser, action })
-        console.log(res)
+        dispatch(setInitialStateGroup(res.data.data))
+        await socket.emit("send_update_user", { emailUser: emailUser, action: actionSocket, data: res.data.data })
         setLoaderOptions(false)
+        setModalOptions(false)
     }
 
     return (

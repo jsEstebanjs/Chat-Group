@@ -42,7 +42,7 @@ function NavInfoChannel({ visible, funHandle }) {
                 setErrorSendInvitation("")
             }, 5000)
         } else {
-            await socket.emit("send_invitation", res.data.data)
+            await socket.emit("send_update_user", { emailUser: res.data.data.emailUser, action: "send_invitation", data: res.data.data })
             reset({ email: "" })
             setAddMember(false)
 
@@ -52,10 +52,12 @@ function NavInfoChannel({ visible, funHandle }) {
         if (leaveGroup === false) {
             setLeaveGroup(true)
             const res = await LeaveTheGroup(id)
+            console.log(res)
             await socket.emit("update_group", res.data.data)
-            dispatch(resetToInitialStateGroup())
+            await socket.emit("leave_room", res.data.data._id);
             const resUser = await validateToken()
             dispatch(setInitialState(resUser.data.data));
+            dispatch(resetToInitialStateGroup())
             setLeaveGroup(false)
             funHandle(false)
         }
@@ -64,6 +66,12 @@ function NavInfoChannel({ visible, funHandle }) {
         if (deleteGroup === false) {
             setDeleteGroup(true)
             const res = await DeleteGroup(id)
+            await socket.emit("delete_group", res.data.data._id);
+            funHandle(false)
+            dispatch(resetToInitialStateGroup())
+            const resUser = await validateToken()
+            dispatch(setInitialState(resUser.data.data));
+            await socket.emit("leave_room", res.data.data._id);
             setDeleteGroup(false)
         }
 
@@ -117,7 +125,7 @@ function NavInfoChannel({ visible, funHandle }) {
                             </form >
                             {
                                 group.usersId.map((item) => (
-                                    <ModalMembers emailUser={item.email}  idUser={item._id} owner={group.ownersId.includes(item._id)} key={item._id} name={item.name} />
+                                    <ModalMembers emailUser={item.email} idUser={item._id} owner={group.ownersId.includes(item._id)} key={item._id} name={item.name} />
                                 ))
 
                             }

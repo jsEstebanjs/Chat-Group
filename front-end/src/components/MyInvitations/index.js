@@ -2,19 +2,10 @@ import styles from './index.module.scss';
 import ModalInvitations from './ModalInvitations';
 import { useEffect, useState } from 'react';
 import { Ring } from '@uiball/loaders'
-import socket from '../../apis/socket';
 import { MdOutlineWatchLater } from "react-icons/md";
 
-function MyInvitations({ handle, visible, reload, invitations, loaderInvitations, pushInvitation }) {
+function MyInvitations({ handle, visible, reload, invitations, loaderInvitations }) {
 
-    useEffect(() => {
-        socket.on("receive_invitation", (data) => {
-            pushInvitation(data)
-        });
-        return () => {
-            socket.off("receive_invitation")
-        }
-    }, [socket]);
 
     return (
         <div className={`${styles.mainContainerMyInvitations} ${visible ? styles.mainContainerMyInvitationsVisible : null}`}>

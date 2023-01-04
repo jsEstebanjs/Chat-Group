@@ -44,7 +44,7 @@ function App() {
 
   useEffect(() => {
     if (user.email) {
-      socket.emit("waiting_for_invitations", user.email);
+      socket.emit("waiting_for_user_updates", user.email);
     }
   }, [user])
 

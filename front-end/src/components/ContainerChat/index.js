@@ -11,14 +11,16 @@ import { GetGroup } from "../../apis/GetGroup";
 import LoaderMessageAndInfoGroup from "./LoaderMessageAndInfoGroup";
 import socket from "../../apis/socket";
 import { GetMessages } from '../../apis/GetMessages'
-import { setInitialStateGroup } from "../../store/groupSlice";
-import { editGroupUser } from "../../store/userSlice";
+import { setInitialStateGroup, resetToInitialStateGroup } from "../../store/groupSlice";
+import { editGroupUser,setInitialState } from "../../store/userSlice";
+import { validateToken } from "../../apis/ValidateToken";
 
 function ContainerChat() {
     const [modalChannels, setModalChannels] = useState(false)
     const [modalInfoChannel, setModalInfoChannel] = useState(false)
     const [loaderMessagesAndGroup, setLoaderMessagesAndGroup] = useState(false)
     const [messages, setMessages] = useState([])
+    const [infoMessage,setInfoMessage] = useState({page:0,amount:15})
     const group = useSelector((state) => state.groupSlice)
     const dispatch = useDispatch()
 
@@ -28,13 +30,24 @@ function ContainerChat() {
     const handleModalInfoChannel = (value) => {
         setModalInfoChannel(value)
     }
-    useEffect(() => {
+    const modifySetInfoMessage = ()=>{
+        if(infoMessage.mounth === 0){
+            if(infoMessage.page !== 0){
+                setInfoMessage({page:infoMessage.page - 1,amount:14})
+            }
+        }else if(infoMessage.mounth > 0){
+            setInfoMessage({page:infoMessage.page,amount:infoMessage.amount - 1})
+        }
+
+    }
+     useEffect(() => {
         const getGroup = async () => {
             const res = await GetGroup(group._id);
             if (res?.data?.group?.name) {
                 const { usersId, ownersId, name, messages, description } = res.data.group
                 dispatch(setInitialStateGroup({ usersId, ownersId, name, messages, description }))
                 const resMessage = await GetMessages(15, 1, group._id)
+                setInfoMessage({page:resMessage.data.message.totalPages - 1, amount:15 - resMessage.data.message.docs.length})
                 setMessages(resMessage.data.message.docs)
                 setLoaderMessagesAndGroup(false)
             }
@@ -48,29 +61,46 @@ function ContainerChat() {
     }, [group._id])
 
     useEffect(() => {
-        socket.on("emit_update_group", (data) => {
+        socket.on("emit_delete_group", async (data) => {
+            await socket.emit("leave_room", data);
+            const res = await validateToken()
+            dispatch(setInitialState(res.data.data));
+            if(data === group._id){
+                dispatch(resetToInitialStateGroup())
+                handleModalInfoChannel(false)
+            }
+        })
+        return () => {
+            socket.off("emit_delete_group")
+        }
+    }, [socket,group])
+
+    useEffect(() => {
+        socket.on("emit_update_group", async(data) => {
+            if(group._id === data._id){
+                const res = await validateToken()
+                dispatch(setInitialState(res.data.data));
+                dispatch(setInitialStateGroup({
+                    usersId: data.usersId,
+                    ownersId: data.ownersId,
+                    name: data.name,
+                    messages: data.messages,
+                    description: data.description,
+                }))
+            }
             dispatch(editGroupUser({ _id: data._id, name: data.name }))
-            dispatch(setInitialStateGroup({
-                usersId: data.usersId,
-                ownersId: data.ownersId,
-                name: data.name,
-                messages: data.messages,
-                description: data.description,
-            }))
         })
         return () => {
             socket.off("emit_update_group")
         }
-    }, [socket])
+    }, [socket,group]);
 
     const addNewMessage = (newMessage) => {
         setMessages((oldMessage) => [newMessage, ...oldMessage])
     }
-
-
     return (
         <div className={styles.mainContainerChatContainer}>
-            <NavUserAndChannels visible={modalChannels} funHandle={handleModalChannels} />
+            <NavUserAndChannels funHandleInfoGroup={handleModalInfoChannel} visible={modalChannels} funHandle={handleModalChannels} />
             <div className={styles.containerChatContainer}>
                 {
                     !loaderMessagesAndGroup ?
@@ -101,7 +131,7 @@ function ContainerChat() {
                         ?
                         <LoaderMessageAndInfoGroup />
                         :
-                        <Chat addNewMessage={addNewMessage} messages={messages} />
+                        <Chat modifySetInfoMessage={modifySetInfoMessage}  infoMessage={infoMessage} addNewMessage={addNewMessage} messages={messages} />
                 }
                 <NavInfoChannel visible={modalInfoChannel} funHandle={handleModalInfoChannel} />
             </div>

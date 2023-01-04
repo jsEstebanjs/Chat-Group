@@ -11,8 +11,12 @@ import MyInvitations from '../MyInvitations';
 import axios from 'axios';
 import { Ring } from '@uiball/loaders'
 import { useOutsideClick } from '../../hooks/useOutsideClick';
+import socket from '../../apis/socket';
+import { resetToInitialStateGroup,setInitialStateGroup } from '../../store/groupSlice';
+import { validateToken } from '../../apis/ValidateToken';
+import { setInitialState } from '../../store/userSlice';
 
-function NavUserAndChannels({ funHandle, visible }) {
+function NavUserAndChannels({ funHandle, visible,funHandleInfoGroup }) {
     const [modalSettingsUser, setModalSettingsUser] = useState(false)
     const [modalNewChannel, setModalNewChannel] = useState(false)
     const [myInvitations, setMyInvitations] = useState(false)
@@ -22,6 +26,7 @@ function NavUserAndChannels({ funHandle, visible }) {
     const dispatch = useDispatch()
     const navigate = useNavigate()
     const user = useSelector((state) => state.userSlice)
+    const groupId = useSelector((state)=> state.groupSlice._id)
     const ref = useOutsideClick(setModalSettingsUser)
     useEffect(() => {
         setLoaderInvitations(true)
@@ -40,6 +45,40 @@ function NavUserAndChannels({ funHandle, visible }) {
                 setLoaderInvitations(false)
             });
     }, [fetch])
+
+    
+    useEffect(() => {
+        socket.on("receive_update_user", async(data) => {
+            if(data.action === "send_invitation"){
+                pushInvitation(data.data)
+            }else if(data.action === "removed_from_group"){
+                const res = await validateToken()
+                dispatch(setInitialState(res.data.data))
+                if(groupId === data.data._id){
+                    funHandleInfoGroup(false)
+                    dispatch(resetToInitialStateGroup())
+                }
+            }else if("update_range_group"){
+                const res = await validateToken()
+                dispatch(setInitialState(res.data.data))
+                if(groupId === data.data._id){
+                    
+                    dispatch(setInitialStateGroup(
+                        {
+                            usersId: data.data.usersId,
+                            ownersId: data.data.ownersId,
+                            name: data.data.name,
+                            messages: data.data.messages,
+                            description: data.data.description,
+                        }
+                    ))
+                }
+            }
+        });
+        return () => {
+            socket.off("receive_update_user")
+        }
+    }, [socket,groupId]);
 
     const handleFetch = () => {
         setFetch(!fetch)
@@ -64,7 +103,7 @@ function NavUserAndChannels({ funHandle, visible }) {
     return (
         <>
             <div onClick={() => funHandle(false)} className={`${styles.opacity} ${visible ? styles.opacityVisible : null}`}></div>
-            <MyInvitations pushInvitation={pushInvitation} loaderInvitations={loaderInvitations} invitations={invitations} reload={handleFetch} handle={handleMyInvitations} visible={myInvitations} />
+            <MyInvitations  loaderInvitations={loaderInvitations} invitations={invitations} reload={handleFetch} handle={handleMyInvitations} visible={myInvitations} />
             <CreateChannel visible={modalNewChannel} handle={handleNewChannel} />
             <div className={`${styles.mainContainerNavUserAndChannels} ${visible ? styles.mainContainerNavUserAndChannelsVisible : null}`}>
                 <div className={styles.containerChannelsTitle}>

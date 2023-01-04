@@ -8,10 +8,11 @@ import { encryptData, decryptData } from '../../cryptoMessage';
 import ModalMessage from '../ModalMessage';
 import { Ring } from '@uiball/loaders'
 
-function Chat({ messages, addNewMessage }) {
+function Chat({ messages, addNewMessage,infoMessage ,modifySetInfoMessage}) {
     const [valueMessage, setValueMessage] = useState("")
     const [loaderMessage, setLoaderMessage] = useState(false)
     const groupId = useSelector((state) => state.groupSlice._id)
+    
 
     const handleMessage = async (e) => {
         e.preventDefault()
@@ -20,6 +21,7 @@ function Chat({ messages, addNewMessage }) {
                 setValueMessage("")
                 const res = await CreateMessage({ groupId: groupId, message: encryptData(valueMessage) })
                 await socket.emit("send_message", res.data.data);
+                modifySetInfoMessage()
                 addNewMessage(res.data.data)
                 setLoaderMessage(false)
         }
@@ -28,6 +30,7 @@ function Chat({ messages, addNewMessage }) {
         socket.on("receive_message", (data) => {
             if (data.groupId === groupId) {
                 addNewMessage(data);
+                modifySetInfoMessage()
             }
         })
         return () => {
