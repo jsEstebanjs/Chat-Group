@@ -21,4 +21,4 @@ app.use('/groups', groupRouter)
 app.use('/invitation', invitationRouter)
 app.use('/message', messageRouter)
 
-module.exports = server
+module.exports = app
