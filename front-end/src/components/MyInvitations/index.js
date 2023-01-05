@@ -1,6 +1,5 @@
 import styles from './index.module.scss';
 import ModalInvitations from './ModalInvitations';
-import { useEffect, useState } from 'react';
 import { Ring } from '@uiball/loaders'
 import { MdOutlineWatchLater } from "react-icons/md";
 
