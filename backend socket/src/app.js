@@ -2,18 +2,23 @@ require('dotenv').config();
 const express = require('express');
 const http = require("http")
 const { Server } = require('socket.io')
+const morgan = require('morgan');
+
 
 const app = express();
 const server = http.createServer(app)
-const port = process.env.PORTSOCKET || 3000
+const port = process.env.PORTSOCKET || 8081
 const io = new Server(server, {
   cors: {
-    origin: [`${process.env.ORIGIN}`],
+    origin: `${process.env.ORIGIN_SOCKET}`,
+    methods: ["GET","HEAD","PUT","PATCH","POST","DELETE"],
+    allowedHeaders: ["my-custom-header"],
+    credentials: true
   }
 })
+app.use(morgan("dev"))
 
 io.on('connection', (socket) => {
-
   socket.on("join_room", (data) => {
     try{
       socket.join(data);
@@ -72,5 +77,7 @@ io.on('connection', (socket) => {
 
 
 })
-server.listen(port);
+server.listen(port,()=>{
+  console.log(`socket is run in port ${port}`)
+});
 module.exports = server
