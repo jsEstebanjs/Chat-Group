@@ -26,6 +26,7 @@ function NavUserAndChannels({ funHandle, visible,funHandleInfoGroup }) {
     const dispatch = useDispatch()
     const navigate = useNavigate()
     const user = useSelector((state) => state.userSlice)
+    const [groups,setGroups] = useState([])
     const groupId = useSelector((state)=> state.groupSlice._id)
     const ref = useOutsideClick(setModalSettingsUser)
     useEffect(() => {
@@ -45,7 +46,9 @@ function NavUserAndChannels({ funHandle, visible,funHandleInfoGroup }) {
                 setLoaderInvitations(false)
             });
     }, [fetch])
-
+    useEffect(()=>{
+        setGroups(user.groupsId)
+    },[user.groupsId])
     
     useEffect(() => {
         socket.on("receive_update_user", async(data) => {
@@ -100,6 +103,20 @@ function NavUserAndChannels({ funHandle, visible,funHandleInfoGroup }) {
     const pushInvitation = (data) => {
         setInvitations((list) => [...list, data])
     }
+
+    const searchGroup = (e) =>{
+        if(e.target.value.length === 0){
+            setGroups(user.groupsId)
+        }else if(e.target.value.length > 0){
+            const filterGroups = groups.filter((item)=>{
+                if(item.name.includes(e.target.value)){
+                    return item
+                }
+            })
+            setGroups(filterGroups)
+        }
+        
+    }
     return (
         <>
             <div onClick={() => funHandle(false)} className={`${styles.opacity} ${visible ? styles.opacityVisible : null}`}></div>
@@ -114,11 +131,11 @@ function NavUserAndChannels({ funHandle, visible,funHandleInfoGroup }) {
                     <div className={styles.mainContainerSearch}>
                         <div className={styles.containerSearch}>
                             <MdSearch />
-                            <input type='text' placeholder='Search' />
+                            <input type='text' placeholder='Search' onChange={(e)=> searchGroup(e)}/>
                         </div>
                     </div>
                     <div className={styles.mainContainerChannelsAndSearch}>
-                        {user.groupsId.map((item) => (
+                        {groups.map((item) => (
                             <ModalChannel funHandle={funHandle} key={item._id} id={item._id} name={item.name} />
                         ))}
                     </div>

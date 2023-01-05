@@ -52,7 +52,6 @@ function NavInfoChannel({ visible, funHandle }) {
         if (leaveGroup === false) {
             setLeaveGroup(true)
             const res = await LeaveTheGroup(id)
-            console.log(res)
             await socket.emit("update_group", res.data.data)
             await socket.emit("leave_room", res.data.data._id);
             const resUser = await validateToken()
