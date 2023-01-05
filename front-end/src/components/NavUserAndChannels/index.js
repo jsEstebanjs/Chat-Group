@@ -169,10 +169,10 @@ function NavUserAndChannels({ funHandle, visible,funHandleInfoGroup }) {
                         </div >
                     </div>
                     <div className={`${styles.mainContainerSettingsUser} ${modalSettingsUser ? styles.mainContainerSettingsUserVisibility : null}`}>
-                        <div onClick={() => setModalSettingsUser(!modalSettingsUser)} className={styles.containerSettingsUser}>
+                        {/* <div onClick={() => setModalSettingsUser(!modalSettingsUser)} className={styles.containerSettingsUser}>
                             <span><MdAccountCircle /></span>
                             <p>My Profile</p>
-                        </div>
+                        </div> */}
                         <div onClick={() => {
                             handleMyInvitations(true)
                             setModalSettingsUser(!modalSettingsUser)
