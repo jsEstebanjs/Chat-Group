@@ -68,15 +68,15 @@ function Chat({ messages, addNewMessage, infoMessage, modifySetInfoMessage, sear
         }
     }
     useEffect(() => {
-        socket.once("receive_message", (data) => {
+        socket.on("receive_message", (data) => {
             if (data.groupId === groupId) {
                 addNewMessage(data);
                 modifySetInfoMessage();
             }
         })
-        // return () => {
-        //     socket.off("receive_message")
-        // }
+        return () => {
+            socket.off("receive_message")
+        }
     }, [socket, infoMessage]);
 
     return (
