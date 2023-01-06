@@ -22,6 +22,7 @@ function ModalMembers({ name, owner, idUser, emailUser }) {
         const res = await AdminOptions(groupId, { idUser, action })
         dispatch(setInitialStateGroup(res.data.data))
         await socket.emit("send_update_user", { emailUser: emailUser, action: actionSocket, data: res.data.data })
+        await socket.emit("update_group", res.data.data)
         setLoaderOptions(false)
         setModalOptions(false)
     }
