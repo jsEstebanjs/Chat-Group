@@ -68,17 +68,15 @@ function Chat({ messages, addNewMessage, infoMessage, modifySetInfoMessage, sear
         }
     }
     useEffect(() => {
-        socket.on("receive_message", (data) => {
-            console.log("llego un mensaje",data)
+        socket.once("receive_message", (data) => {
             if (data.groupId === groupId) {
-                console.log("se incluyo el mensaje",data)
                 addNewMessage(data);
                 modifySetInfoMessage();
             }
         })
-        return () => {
-            socket.off("receive_message")
-        }
+        // return () => {
+        //     socket.off("receive_message")
+        // }
     }, [socket, infoMessage]);
 
     return (
