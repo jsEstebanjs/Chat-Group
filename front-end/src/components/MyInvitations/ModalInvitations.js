@@ -21,7 +21,7 @@ function ModalInvitations({ reload, name, invitationId }) {
         setLoader(true)
         const res = await AcceptInvitation(invitationId)
         socket.emit("join_room", res.data.data._id);
-        dispatch(acceptGroup({ name: res.data.data.name, _id: res.data.data._id }))
+        dispatch(acceptGroup({ name: res.data.data.name, _id: res.data.data._id, favicon:res.data.data.favicon }))
         await socket.emit("update_group",res.data.data)
         reload()
         setLoader(false)
