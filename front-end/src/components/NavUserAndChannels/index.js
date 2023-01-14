@@ -4,7 +4,6 @@ import { useState, useEffect } from 'react';
 import CreateChannel from '../CreateChannel';
 import ModalChannel from '../ModalChannel';
 import { useDispatch, useSelector } from 'react-redux';
-import { resetState } from '../../store/userSlice';
 import { useNavigate } from 'react-router-dom';
 import Cookies from 'js-cookie';
 import MyInvitations from '../MyInvitations';
@@ -14,7 +13,7 @@ import { useOutsideClick } from '../../hooks/useOutsideClick';
 import socket from '../../apis/socket';
 import { resetToInitialStateGroup,setInitialStateGroup } from '../../store/groupSlice';
 import { validateToken } from '../../apis/ValidateToken';
-import { setInitialState } from '../../store/userSlice';
+import { setInitialState, resetState } from '../../store/userSlice';
 
 function NavUserAndChannels({ funHandle, visible,funHandleInfoGroup }) {
     const [modalSettingsUser, setModalSettingsUser] = useState(false)
@@ -137,7 +136,7 @@ function NavUserAndChannels({ funHandle, visible,funHandleInfoGroup }) {
                     </div>
                     <div className={styles.mainContainerChannelsAndSearch}>
                         {groups.map((item) => (
-                            <ModalChannel funHandle={funHandle} key={item._id} id={item._id} name={item.name} />
+                            <ModalChannel funHandle={funHandle} key={item._id} id={item._id} name={item.name} favicon={item.favicon} />
                         ))}
                     </div>
                     <div  className={styles.containerUserInfo}>

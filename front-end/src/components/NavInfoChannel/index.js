@@ -14,6 +14,11 @@ import { resetToInitialStateGroup } from '../../store/groupSlice';
 import { DeleteGroup } from '../../apis/DeleteGroup';
 import { validateToken } from '../../apis/ValidateToken';
 import { setInitialState } from '../../store/userSlice';
+import Cookies from 'js-cookie';
+import { useNavigate } from 'react-router-dom';
+import { resetState } from '../../store/userSlice';
+import ChangePicture from '../ChangePicture';
+import { UpdateGroup } from '../../apis/UpdateGroup';
 
 function NavInfoChannel({ visible, funHandle }) {
     const [addMember, setAddMember] = useState(false)
@@ -21,6 +26,8 @@ function NavInfoChannel({ visible, funHandle }) {
     const [errorSendInvitation, setErrorSendInvitation] = useState("")
     const [leaveGroup, setLeaveGroup] = useState(false)
     const [deleteGroup, setDeleteGroup] = useState(false)
+    const [errorLeaveOrDeleteGroup, setErrorLeaveOrDeleteGroup] = useState("")
+    const navigate = useNavigate()
     const userGroupsOwnerId = useSelector((state) => state.userSlice.groupsOwnerId)
     const group = useSelector((state) => state.groupSlice)
     const dispatch = useDispatch()
@@ -41,7 +48,7 @@ function NavInfoChannel({ visible, funHandle }) {
             setTimeout(() => {
                 setErrorSendInvitation("")
             }, 5000)
-        } else {
+        } else if (res?.data?.data?.emailUser) {
             await socket.emit("send_update_user", { emailUser: res.data.data.emailUser, action: "send_invitation", data: res.data.data })
             reset({ email: "" })
             setAddMember(false)
@@ -49,29 +56,67 @@ function NavInfoChannel({ visible, funHandle }) {
         }
     };
     const handleLeaveTheGroup = async (id) => {
-        if (leaveGroup === false) {
-            setLeaveGroup(true)
-            const res = await LeaveTheGroup(id)
-            await socket.emit("update_group", res.data.data)
-            await socket.emit("leave_room", res.data.data._id);
-            const resUser = await validateToken()
-            dispatch(setInitialState(resUser.data.data));
-            dispatch(resetToInitialStateGroup())
-            setLeaveGroup(false)
-            funHandle(false)
+        try {
+            if (leaveGroup === false) {
+                setLeaveGroup(true)
+                const res = await LeaveTheGroup(id)
+                if (!res) {
+                    setLeaveGroup(false)
+                    throw new Error("Could not leave the group")
+                } else if (res?.data?.data?._id) {
+                    await socket.emit("update_group", res.data.data)
+                    await socket.emit("leave_room", res.data.data._id);
+                    const resUser = await validateToken()
+                    dispatch(setInitialState(resUser.data.data));
+                    dispatch(resetToInitialStateGroup())
+                    setLeaveGroup(false)
+                    funHandle(false)
+                } else {
+                    setLeaveGroup(false)
+                    throw new Error("Could not leave the group")
+                }
+            }
+        } catch (err) {
+            setErrorLeaveOrDeleteGroup(err.message)
+            setTimeout(()=>{
+                setErrorLeaveOrDeleteGroup("")
+
+            },5000)
         }
     }
     const handleDeleteGroup = async (id) => {
-        if (deleteGroup === false) {
-            setDeleteGroup(true)
-            const res = await DeleteGroup(id)
-            await socket.emit("delete_group", res.data.data._id);
-            funHandle(false)
-            dispatch(resetToInitialStateGroup())
-            const resUser = await validateToken()
-            dispatch(setInitialState(resUser.data.data));
-            await socket.emit("leave_room", res.data.data._id);
-            setDeleteGroup(false)
+        try{
+            if (deleteGroup === false) {
+                setDeleteGroup(true)
+                const res = await DeleteGroup(id)
+                if(!res){
+                    setDeleteGroup(false)
+                    throw new Error("Could not delete the group")
+                }else if(res?.data?.data?._id){
+                    await socket.emit("delete_group", res.data.data._id);
+                    await socket.emit("leave_room", res.data.data._id);
+                    setDeleteGroup(false)
+                    funHandle(false)
+                    dispatch(resetToInitialStateGroup())
+                    const resUser = await validateToken()
+                    if(resUser?.data?.data){
+                        dispatch(setInitialState(resUser.data.data));
+                    }else{
+                        Cookies.remove("token")
+                        dispatch(resetState())
+                        navigate("/login")
+                    }
+                }else{
+                    setDeleteGroup(false)
+                    throw new Error("Could not delete the group")
+                }
+            }
+        }catch(err){
+            setErrorLeaveOrDeleteGroup(err.message)
+            setTimeout(()=>{
+                setErrorLeaveOrDeleteGroup("")
+
+            },5000)
         }
 
     }
@@ -86,6 +131,7 @@ function NavInfoChannel({ visible, funHandle }) {
                 <div className={styles.containerNavInfoChannel}>
                     <div className={styles.containerInfoAndMembers}>
                         <div className={styles.containerTitleAndInfo}>
+                            <ChangePicture api={UpdateGroup} idGroup={group._id} name={group.name} picture={group.favicon}/>
                             <UpdateInput keyUpdate="name" maxLength={25} visible={visible} fontSize={20} value={group.name} />
                             <UpdateInput keyUpdate="description" maxLength={300} visible={visible} fontSize={16} value={group.description} />
                         </div>
@@ -131,6 +177,11 @@ function NavInfoChannel({ visible, funHandle }) {
                         </div>
                     </div>
                     <div className={styles.mainContainerLeaveGroup}>
+                        {errorLeaveOrDeleteGroup
+                            ?
+                            <p className={styles.infoErrorLeaveOrDeleteGroup}>{errorLeaveOrDeleteGroup}</p>
+                            :
+                            null}
                         <div onClick={() => handleLeaveTheGroup(group._id)} className={styles.containerLeaveGroup}>
                             <span><MdLogout /></span>
                             <p>Leave the group</p>

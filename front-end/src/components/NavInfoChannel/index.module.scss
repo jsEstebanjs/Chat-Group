@@ -175,6 +175,10 @@
       flex-direction: column;
       width: 100%;
       align-items: center;
+      .infoErrorLeaveOrDeleteGroup{
+        color: $Red;
+        font-size: 18px;
+      }
       .containerLeaveGroup{
         display: flex;
         width: 100%;

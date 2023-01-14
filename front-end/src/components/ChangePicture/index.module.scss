@@ -1,0 +1,122 @@
+@import "../../styles/abstracts/variables.scss";
+.containerChangePicture{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background-color: $Hover-Black;
+    width: 180px;
+    border-radius: 50%;
+    height: 180px;
+    color: $White;
+    font-weight: 700;
+    font-size: 30px;
+    margin: 0 auto;
+    position: relative;
+    &:hover  .containerOptionsPicture {
+        visibility: visible;
+    }
+    .imgContainer{
+        width: 100%;
+        height: 100%;
+        border-radius: 50%;
+        object-fit: cover;
+    }
+    .mainContainerLoaderPicture{
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        .loaderPictureOpacityContainer{
+            height: 100%;
+            width: 100%;
+            opacity: 0.8;
+            background-color: $Black;
+        }
+        .containerLoaderPicture{
+            z-index: 1;
+            position: absolute;
+        }
+    }
+
+
+
+    .containerOptionsPicture{
+        display: flex;
+        flex-direction: column;
+        position: absolute;
+        top: 0;
+        left: 0;
+        bottom: 0;
+        right: 0;
+        visibility: hidden;
+        .opacityPictureChange{
+            position: absolute;
+            opacity: 0.8;
+            width: 100%;
+            height: 100%;
+            background-color: $Black;
+        }
+        .containerOptions{
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 1;
+            color: $White;
+            width: 100%;
+            height: 100%;
+            font-size: 18px;
+            gap: 5px;
+            input{
+                display: none;
+            }
+            .optionsPictureUpload{
+                transition: color 0.3s ease-in-out;
+                cursor: pointer;
+                &:hover{
+                    color: $Blue;
+                }
+            }
+            .optionsPictureDelete{
+                cursor: pointer;
+                transition: color 0.3s ease;
+                &:hover{
+                    color: $Red;
+                }
+            }
+        }
+    }
+    .containerOptionsPictureNone{
+        display: none;
+    }
+    .containerAcceptOrNot{
+        display: flex;
+        width: 100%;
+        flex-direction: row;
+        height: max-content;
+        align-items: center;
+        justify-content: space-between;
+        position: absolute;
+        bottom: 0;
+        span{
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            font-size: 32px;
+            cursor: pointer;
+        }
+        .acceptBtn{
+            background-color: $Blue;
+        }
+        .notBtn{
+            background-color: $Red;
+        }
+    }
+
+}

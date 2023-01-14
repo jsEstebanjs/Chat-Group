@@ -12,12 +12,19 @@
         background-color: $Hover-Black;
         margin-right: 10px;
         border-radius: 8px;
-        padding: 10px;
         font-size: 18px;
         font-weight: 700;
         width: 47px;
+        height: 47px;
         align-items: center;
         justify-content: center;
+        border: 1px solid $Hover-Black;
+        .imgModalChannel{
+            width: 100%;
+            height: 100%;
+            border-radius: 8px;
+            object-fit: cover;
+        }
     }
     p{
         color: $Text-Black;

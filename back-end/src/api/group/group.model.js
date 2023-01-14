@@ -14,6 +14,7 @@ const groupSchema = new Schema(
         },
         favicon: {
             type: String,
+            default:""
         },
         usersId: [{
             type: Schema.Types.ObjectId,

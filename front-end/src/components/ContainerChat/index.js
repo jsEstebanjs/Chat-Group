@@ -47,8 +47,7 @@ function ContainerChat() {
         const getGroup = async () => {
             const res = await GetGroup(group._id);
             if (res?.data?.group?.name) {
-                const { usersId, ownersId, name, messages, description } = res.data.group
-                dispatch(setInitialStateGroup({ usersId, ownersId, name, messages, description }))
+                dispatch(setInitialStateGroup(res.data.group))
                 const resMessage = await GetMessages(15, 1, group._id)
                 setInfoMessage({ page: resMessage.data.message.nextPage, amount: 15 })
                 setMessages(resMessage.data.message.docs)
@@ -89,9 +88,10 @@ function ContainerChat() {
                     name: data.name,
                     messages: data.messages,
                     description: data.description,
+                    favicon:data.favicon
                 }))
             }
-            dispatch(editGroupUser({ _id: data._id, name: data.name }))
+            dispatch(editGroupUser({ _id: data._id, name: data.name, favicon:data.favicon }))
         })
         return () => {
             socket.off("emit_update_group")
@@ -128,7 +128,7 @@ function ContainerChat() {
                 {!group._id
                     ?
                     <div className={styles.containerDefaultChat}>
-                        <img src={Logo} alt='logo' />
+                        <img className={styles.imgChatGroupDefault} src={Logo} alt='logo' />
                         <h2>Chat Group</h2>
                         <p>Join Any Channel to Start Texting</p>
                     </div>

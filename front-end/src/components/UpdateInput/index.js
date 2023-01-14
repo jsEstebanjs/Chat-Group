@@ -32,7 +32,7 @@ function UpdateInput({ visible, value, fontSize, maxLength, keyUpdate }) {
             const res = await UpdateGroup(groupId, { [keyUpdate]: valueInput })
             await socket.emit("update_group", res.data.data)
             dispatch(setInitialStateGroup({ [keyUpdate]: res.data.data[keyUpdate] }))
-            dispatch(editGroupUser({ _id: res.data.data._id, name: res.data.data.name }))
+            dispatch(editGroupUser({ _id: res.data.data._id, name: res.data.data.name, favicon:res.data.data.favicon }))
             setLoader(false)
             setInputVisible(false)
         } else {

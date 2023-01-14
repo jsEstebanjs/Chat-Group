@@ -6,6 +6,7 @@ const userRouter = require('./api/user/user.route');
 const groupRouter = require('./api/group/group.route');
 const invitationRouter = require('./api/invitation/invitation.route');
 const messageRouter = require('./api/message/message.route');
+const mediaRoute = require('./api/multimedia/media.route')
 
 const app = express();
 app.use(express.json())
@@ -20,5 +21,6 @@ app.use('/users', userRouter)
 app.use('/groups', groupRouter)
 app.use('/invitation', invitationRouter)
 app.use('/message', messageRouter)
+app.use('/media',mediaRoute)
 
 module.exports = app

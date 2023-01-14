@@ -6,7 +6,8 @@ const initialState = {
     ownersId:[],
     name:"",
     messages:[], 
-    description:""
+    description:"",
+    favicon:""
 }
 
 export const groupSlice = createSlice({

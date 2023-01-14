@@ -50,7 +50,7 @@ module.exports = {
 
       const user = await User.findOne({ email }).populate({
         path: "groupsId",
-        select: "name _id",
+        select: "name _id favicon",
       })
 
       if (!user) {
@@ -83,7 +83,7 @@ module.exports = {
     try {
       const user = await User.findById(req.user).populate({
         path: "groupsId",
-        select: "name _id",
+        select: "name _id favicon",
       })
 
       if (!user) {
