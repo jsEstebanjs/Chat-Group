@@ -2,13 +2,9 @@ const { Schema, model } = require("mongoose");
 
 const invitationSchema = new Schema(
     {
-        nameGroup: {
-            type: String,
-            required: [true, "nameGroup id is required"],
-        }, 
         groupId: {
-            type: String,
-            required: [true, "group id is required"],
+            type: Schema.Types.ObjectId,
+            ref: "group"
         },
         emailUser: {
             type: String,

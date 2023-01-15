@@ -19,7 +19,7 @@ function MyInvitations({ handle, visible, reload, invitations, loaderInvitations
                         invitations.length > 0
                         ?
                         invitations.map((item) => (
-                            <ModalInvitations reload={reload} key={item._id} invitationId={item._id} name={item.nameGroup} />
+                            <ModalInvitations reload={reload} key={item._id} invitationId={item._id} name={item.groupId.name} favicon={item.groupId.favicon} />
                         ))
                         :
                         <div className={styles.containerWaitingInvitations}>

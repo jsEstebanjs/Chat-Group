@@ -6,7 +6,10 @@ module.exports = {
     async list(req, res) {
         try {
             const user = await User.findById(req.user)
-            const invitations = await Invitation.find({ emailUser: user.email })
+            const invitations = await Invitation.find({ emailUser: user.email }).populate({
+                path: "groupId",
+                select: "_id name favicon"
+            })
             res
                 .status(200)
                 .json({ message: "Invitations found", data: invitations });
@@ -25,7 +28,6 @@ module.exports = {
                 path: "invitations",
                 select: "groupId"
             })
-
             if (!user) {
                 throw new Error("non-existent user");
             }
@@ -42,15 +44,18 @@ module.exports = {
                 throw new Error("the user is already in the group");
             }
             for (let i = 0; i < guestUser[0].invitations.length; i++) {
-                if (guestUser[0].invitations[i].groupId === groupId) {
+                if (guestUser[0].invitations[i].groupId.toString() === groupId) {
                     throw new Error(`the ${emailUser} is already invited`);
                 }
             }
             const invitation = await Invitation.create({
-                nameGroup: group.name,
                 groupId,
                 emailUser
-            });
+            })
+            await invitation.populate({
+                path: "groupId",
+                select: "_id name favicon"
+            })
             guestUser[0].invitations.unshift(invitation._id)
             await guestUser[0].save({ validateBeforeSave: false });
 
@@ -103,11 +108,12 @@ module.exports = {
                 throw new Error("the invitation does not exist");
             }
             if (!group) {
+                invitation.delete()
                 throw new Error("the group does not exist");
             }
             let validation = true
             for (let i = 0; i < user.invitations.length; i++) {
-                if (user.invitations[0].toString() === id) {
+                if (user.invitations[i].toString() === id) {
                     validation = false
                 }
             }
@@ -122,11 +128,12 @@ module.exports = {
                 path: "usersId",
                 select: "_id name email"
             })
-            const invitationDelete = await Invitation.findByIdAndDelete(id)
+            invitation.delete()
             res
                 .status(200)
                 .json({ message: "invitation accepted", data: groupUpdate });
         } catch (err) {
+            console.log(err)
             res
                 .status(400)
                 .json({ message: "could not accept the invitation", error: err });
